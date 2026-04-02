@@ -112,6 +112,7 @@
   sticky: 0;
   top: 0;
   z-index: 10;
+  gap: 12px;
 }
 
 .action-list-city-header h3 {
@@ -123,6 +124,36 @@
   letter-spacing: 0.8px;
 }
 
+.action-list-city-header-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.action-list-group-toggle {
+  flex-shrink: 0;
+  padding: 4px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+  background-color: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 3px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.action-list-group-toggle:hover {
+  background-color: rgba(255, 255, 255, 0.35);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.action-list-group-toggle:active {
+  background-color: rgba(255, 255, 255, 0.25);
+}
+
 .action-list-city-count {
   font-size: 12px;
   color: #fff;
@@ -130,6 +161,7 @@
   padding: 3px 10px;
   border-radius: 12px;
   font-weight: 600;
+  flex-shrink: 0;
 }
 
 .action-list-city-actions {

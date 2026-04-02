@@ -310,11 +310,9 @@ export function Map({ cities = [], actions = [] }: Props) {
           "marker",
           "cluster",
           "label_country",
-          "label_city",
-          "label_town",
         ];
 
-        const omitPrefixes = ["waterway"];
+        const omitPrefixes = ["waterway", "label_city"];
 
         layers.forEach((layer) => {
           if (
@@ -324,25 +322,6 @@ export function Map({ cities = [], actions = [] }: Props) {
             map.setLayoutProperty(layer.id, "visibility", "none");
           }
         });
-
-        const nameLayers = [
-          "label_country_1",
-          "label_country_2",
-          "label_country_3",
-          "label_city_capital",
-          "label_city",
-          "waterway_line_label",
-          "water_name_line_label",
-          "water_name_point_label",
-        ];
-
-        for (const layerName of nameLayers) {
-          map.setLayoutProperty(layerName, "text-field", [
-            "coalesce",
-            ["get", "name:en"],
-            ["get", "name"],
-          ]);
-        }
 
         map.setPaintProperty("background", "background-color", "#edf3bf");
         map.setPaintProperty("water", "fill-color", "#80acc6");
@@ -379,7 +358,7 @@ export function Map({ cities = [], actions = [] }: Props) {
             "text-field": ["get", "name"],
             "text-font": ["Noto Sans Regular"],
             "text-size": 12,
-            "text-offset": [0, 1.5],
+            "text-offset": [0, 0.7],
             "text-anchor": "top",
           },
           paint: {

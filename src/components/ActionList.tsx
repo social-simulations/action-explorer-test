@@ -14,6 +14,9 @@ export function ActionList({
   onActionDetails,
 }: ActionListProps) {
   const [groupBy, setGroupBy] = useState<"city" | "area">("city");
+  const [collapsedGroups, setCollapsedGroups] = useState<Set<string | number>>(
+    new Set(),
+  );
 
   const handleDetailsClick = (actionId: string | number) => {
     const params = new URLSearchParams(window.location.search);
@@ -24,6 +27,16 @@ export function ActionList({
       `${window.location.pathname}?${params}`,
     );
     onActionDetails?.(actionId);
+  };
+
+  const toggleGroupCollapse = (groupKey: string | number) => {
+    const newCollapsedGroups = new Set(collapsedGroups);
+    if (newCollapsedGroups.has(groupKey)) {
+      newCollapsedGroups.delete(groupKey);
+    } else {
+      newCollapsedGroups.add(groupKey);
+    }
+    setCollapsedGroups(newCollapsedGroups);
   };
 
   // Group actions by city or area based on selection
@@ -84,36 +97,46 @@ export function ActionList({
             <div key={group.key} className="action-list-city-group">
               <div className="action-list-city-header">
                 <h3>{group.label}</h3>
-                <span className="action-list-city-count">
-                  {group.actions.length}
-                </span>
+                <div className="action-list-city-header-right">
+                  <button
+                    className="action-list-group-toggle"
+                    onClick={() => toggleGroupCollapse(group.key)}
+                  >
+                    {collapsedGroups.has(group.key) ? "Show" : "Hide"} items
+                  </button>
+                  <span className="action-list-city-count">
+                    {group.actions.length}
+                  </span>
+                </div>
               </div>
-              <div className="action-list-city-actions">
-                {group.actions.map((action) => (
-                  <div key={action.id} className="action-list-item">
-                    <div className="action-list-item-content">
-                      <h4>{action.name}</h4>
-                      <p className="action-list-item-area">{action.area}</p>
-                      <div className="action-list-item-costs">
-                        <span>
-                          <strong>Investment:</strong> $
-                          {action.investmentCost.toLocaleString()}
-                        </span>
-                        <span>
-                          <strong>Yearly:</strong> $
-                          {action.operationalCostPerYear.toLocaleString()}
-                        </span>
+              {!collapsedGroups.has(group.key) && (
+                <div className="action-list-city-actions">
+                  {group.actions.map((action) => (
+                    <div key={action.id} className="action-list-item">
+                      <div className="action-list-item-content">
+                        <h4>{action.name}</h4>
+                        <p className="action-list-item-area">{action.area}</p>
+                        <div className="action-list-item-costs">
+                          <span>
+                            <strong>Investment:</strong> $
+                            {action.investmentCost.toLocaleString()}
+                          </span>
+                          <span>
+                            <strong>Yearly:</strong> $
+                            {action.operationalCostPerYear.toLocaleString()}
+                          </span>
+                        </div>
                       </div>
+                      <button
+                        className="action-details-button"
+                        onClick={() => handleDetailsClick(action.id)}
+                      >
+                        Details
+                      </button>
                     </div>
-                    <button
-                      className="action-details-button"
-                      onClick={() => handleDetailsClick(action.id)}
-                    >
-                      Details
-                    </button>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              )}
             </div>
           ))
         )}
