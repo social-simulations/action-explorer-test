@@ -13,4 +13,5 @@ export type Action = {
   area: string;
   investmentCost: number;
   operationalCostPerYear: number;
+  description: string;
 };
