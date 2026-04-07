@@ -1,14 +1,14 @@
 import { Action } from "../types/types";
-import "./actionDetails.css";
+import "./action-details.css";
 
 type ActionDetailsProps = {
   action: Action;
   onReturn: () => void;
 };
 
-export function ActionDetails({ 
-  action: { name, area, description, investmentCost, operationalCostPerYear }, 
-  onReturn 
+export function ActionDetails({
+  action: { name, area, description, investmentCost, operationalCostPerYear },
+  onReturn,
 }: ActionDetailsProps) {
   return (
     <div className="action-details">
@@ -25,9 +25,7 @@ export function ActionDetails({
           <h2>Investment Details</h2>
           <div className="action-details-row">
             <span className="label">Investment Cost:</span>
-            <span className="value">
-              ${investmentCost.toLocaleString()}
-            </span>
+            <span className="value">${investmentCost.toLocaleString()}</span>
           </div>
           <div className="action-details-row">
             <span className="label">Operational Cost Per Year:</span>

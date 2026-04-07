@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Action, City } from "../types/types";
-import "./actionList.css";
+import "./action-list.css";
 
 type ActionListProps = {
   actions: Action[];

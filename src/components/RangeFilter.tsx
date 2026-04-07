@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import "./rangeFilter.css";
+import "./range-filter.css";
 
 type RangeFilterProps = {
   label: string;
