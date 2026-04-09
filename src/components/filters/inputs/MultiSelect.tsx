@@ -7,6 +7,7 @@ type MultiSelectProps = {
   onChange: (selected: string[]) => void;
   label: string;
   placeholder?: string;
+  onClear?: () => void;
 };
 
 export function MultiSelect({
@@ -15,6 +16,7 @@ export function MultiSelect({
   onChange,
   label,
   placeholder = "No filter selected",
+  onClear,
 }: MultiSelectProps) {
   const [searchText, setSearchText] = useState("");
   const [isOpen, setIsOpen] = useState(false);
@@ -34,6 +36,13 @@ export function MultiSelect({
 
   const removeItem = (itemKey: string) => {
     onChange(selected.filter((item) => item !== itemKey));
+  };
+
+  const handleClear = () => {
+    onChange([]);
+    if (onClear) {
+      onClear();
+    }
   };
 
   // Close dropdown when clicking outside
@@ -159,6 +168,11 @@ export function MultiSelect({
           </div>
         )}
       </div>
+      {selected.length > 0 && (
+        <button onClick={handleClear} className="clear-button">
+          Clear
+        </button>
+      )}
     </div>
   );
 }

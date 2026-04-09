@@ -1,7 +1,7 @@
 .range-filter {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 0;
   width: 100%;
   box-sizing: border-box;
 }
@@ -9,30 +9,39 @@
 .range-filter-header {
   display: flex;
   align-items: center;
+  background-color: var(--color-blue-light);
+  padding: 12px;
+  border-radius: 4px 4px 0 0;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .range-filter-header label {
   font-weight: 600;
-  font-size: 14px;
-  color: #333;
+  font-size: 16px;
+  color: var(--color-green-dark);
   margin: 0;
 }
 
 .range-filter-slider {
   position: relative;
   height: 20px;
-  margin: 8px 0;
+  margin: 0;
+  padding: 24px 12px 12px 12px;
   width: 100%;
   display: flex;
   align-items: center;
+  background-color: white;
+  box-sizing: border-box;
 }
 
 .range-filter-track {
   position: absolute;
-  width: 100%;
+  width: calc(100% - 38px);
   height: 6px;
   top: 50%;
-  left: 0;
+  left: 19px;
+  right: 19px;
   transform: translateY(-50%);
   z-index: 1;
 }
@@ -48,17 +57,17 @@
 .range-filter-track-fill {
   position: absolute;
   height: 6px;
-  background: #175162;
+  background: var(--color-red);
   border-radius: 3px;
   top: 0;
 }
 
 .range-input {
   position: absolute;
-  width: 100%;
+  width: calc(100% - 24px);
   height: 20px;
   top: 0;
-  left: 0;
+  left: 12px;
   background: none;
   border: none;
   border-radius: 3px;
@@ -79,26 +88,26 @@
 .range-input::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  width: 18px;
-  height: 18px;
+  width: 14px;
+  height: 14px;
   border-radius: 50%;
-  background: #175162;
+  background: var(--color-red);
   cursor: pointer;
   pointer-events: auto;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  margin-top: -6px;
+  margin-top: 2px;
 }
 
 .range-input::-moz-range-thumb {
-  width: 18px;
-  height: 18px;
+  width: 14px;
+  height: 14px;
   border-radius: 50%;
-  background: #175162;
+  background: var(--color-red);
   cursor: pointer;
   pointer-events: auto;
   border: none;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  margin-top: -6px;
+  margin-top: 2px;
 }
 
 .range-input::-webkit-slider-runnable-track {
@@ -118,6 +127,11 @@
   display: flex;
   align-items: center;
   gap: 8px;
+  background-color: white;
+  padding: 12px;
+  border-radius: 0 0 4px 4px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .number-input {
@@ -143,24 +157,23 @@
 }
 
 .clear-button {
-  padding: 6px 12px;
-  font-size: 12px;
+  margin-top: 8px;
+  padding: 0;
+  font-size: 14px;
   font-weight: 500;
-  color: #175162;
-  background-color: #f0f0f0;
-  border: 1px solid #d0d0d0;
-  border-radius: 4px;
+  color: var(--color-red);
+  background-color: transparent;
+  border: none;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: opacity 0.2s ease;
   white-space: nowrap;
+  align-self: flex-end;
 }
 
 .clear-button:hover {
-  background-color: #e8e8e8;
-  border-color: #b8b8b8;
+  opacity: 0.8;
 }
 
 .clear-button:active {
-  background-color: #ddd;
-  border-color: #aaa;
+  opacity: 0.6;
 }

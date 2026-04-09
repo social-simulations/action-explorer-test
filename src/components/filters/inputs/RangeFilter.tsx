@@ -115,12 +115,12 @@ export function RangeFilter({
           onChange={handleMaxInputChange}
           className="number-input"
         />
-        {onClear && (
-          <button onClick={handleClear} className="clear-button">
-            Clear
-          </button>
-        )}
       </div>
+      {onClear && (min !== defaultMinValue || max !== defaultMaxValue) && (
+        <button onClick={handleClear} className="clear-button">
+          Reset
+        </button>
+      )}
     </div>
   );
 }
