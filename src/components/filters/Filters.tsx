@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { MultiSelect } from "./inputs/MultiSelect";
 import { RangeFilter } from "./inputs/RangeFilter";
+import { TextFilter } from "./inputs/TextFilter";
 import "./filters.css";
 import { ActionArea, Country } from "../../enums";
 
@@ -9,6 +10,8 @@ type FiltersProps = {
   onCountriesChange: (countries: string[]) => void;
   selectedAreas: string[];
   onAreasChange: (areas: string[]) => void;
+  keywords?: string[];
+  onKeywordsChange?: (keywords: string[]) => void;
   investmentCost?: [number, number];
   onInvestmentCostChange?: (min: number, max: number) => void;
   operationalCostPerYear?: [number, number];
@@ -22,6 +25,8 @@ export function Filters({
   onCountriesChange,
   selectedAreas,
   onAreasChange,
+  keywords = [],
+  onKeywordsChange,
   investmentCost = [0, 100],
   onInvestmentCostChange,
   operationalCostPerYear = [0, 100],
@@ -79,6 +84,7 @@ export function Filters({
     const params = new URLSearchParams(window.location.search);
     params.delete("countries");
     params.delete("areas");
+    params.delete("keywords");
     params.delete("investmentCost");
     params.delete("operationalCostPerYear");
     window.history.replaceState(
@@ -89,6 +95,7 @@ export function Filters({
     // Also update the component state and parent callbacks
     onCountriesChange([]);
     onAreasChange([]);
+    onKeywordsChange?.([]);
     onInvestmentCostChange?.(0, maxInvestmentCost);
     onOperationalCostPerYearChange?.(0, maxOperationalCostPerYear);
   };
@@ -102,6 +109,12 @@ export function Filters({
         </button>
       </div>
       <div className="filters-container">
+        <TextFilter
+          keywords={keywords}
+          onChange={onKeywordsChange || (() => {})}
+          label="Keywords"
+          placeholder="Type..."
+        />
         <MultiSelect
           options={countryEntries}
           selected={selectedCountries}

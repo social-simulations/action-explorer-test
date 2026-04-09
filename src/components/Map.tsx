@@ -25,6 +25,7 @@ export function Map({ cities = [], actions = [] }: Props) {
   const [selectedActionId, setSelectedActionId] = useState<string | null>(null);
   const [selectedCountries, setSelectedCountries] = useState<string[]>([]);
   const [selectedAreas, setSelectedAreas] = useState<string[]>([]);
+  const [keywords, setKeywords] = useState<string[]>([]);
   const [investmentCostRange, setInvestmentCostRange] = useState<
     [number, number]
   >([0, 992565]);
@@ -50,6 +51,7 @@ export function Map({ cities = [], actions = [] }: Props) {
     const params = new URLSearchParams(window.location.search);
     const countriesParam = params.get("countries");
     const areasParam = params.get("areas");
+    const keywordsParam = params.get("keywords");
     const investmentCostParam = params.get("investmentCost");
     const operationalCostParam = params.get("operationalCostPerYear");
     const viewParam = params.get("view");
@@ -60,6 +62,9 @@ export function Map({ cities = [], actions = [] }: Props) {
     }
     if (areasParam) {
       setSelectedAreas(areasParam.split(","));
+    }
+    if (keywordsParam) {
+      setKeywords(keywordsParam.split(","));
     }
     // If view=list, show list; otherwise (view=map or no view param), show map
     setView(viewParam === "list" ? "list" : "map");
@@ -109,6 +114,9 @@ export function Map({ cities = [], actions = [] }: Props) {
     if (selectedAreas.length > 0) {
       params.set("areas", selectedAreas.join(","));
     }
+    if (keywords.length > 0) {
+      params.set("keywords", keywords.join(","));
+    }
     if (
       investmentCostRange[0] !== 0 ||
       investmentCostRange[1] !== maxValues.maxInvestmentCost
@@ -139,6 +147,7 @@ export function Map({ cities = [], actions = [] }: Props) {
   }, [
     selectedCountries,
     selectedAreas,
+    keywords,
     investmentCostRange,
     operationalCostPerYearRange,
     isInitialized,
@@ -511,6 +520,8 @@ export function Map({ cities = [], actions = [] }: Props) {
           onCountriesChange={setSelectedCountries}
           selectedAreas={selectedAreas}
           onAreasChange={setSelectedAreas}
+          keywords={keywords}
+          onKeywordsChange={setKeywords}
           investmentCost={investmentCostRange}
           onInvestmentCostChange={(min, max) =>
             setInvestmentCostRange([min, max])
