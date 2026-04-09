@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import "./multi-select.css";
 
 type MultiSelectProps = {
   options: Array<[string, string]>;
