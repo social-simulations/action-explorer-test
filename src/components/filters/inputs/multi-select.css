@@ -29,6 +29,11 @@
 .label-chevron {
   font-size: 16px;
   margin-left: auto;
+  transition: transform 0.2s ease;
+}
+
+.label-chevron.open {
+  transform: scaleX(-1);
 }
 
 .multi-select-wrapper {

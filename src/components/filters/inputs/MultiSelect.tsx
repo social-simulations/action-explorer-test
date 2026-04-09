@@ -48,10 +48,9 @@ export function MultiSelect({
   // Close dropdown when clicking outside
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
-      if (
-        wrapperRef.current &&
-        !wrapperRef.current.contains(event.target as Node)
-      ) {
+      const target = event.target as Node;
+      const filterSection = wrapperRef.current?.closest(".filter-section");
+      if (filterSection && !filterSection.contains(target)) {
         setIsOpen(false);
       }
     }
@@ -66,21 +65,18 @@ export function MultiSelect({
     .filter(([key, _]) => selected.includes(key))
     .map(([key, value]) => ({ key, value }));
 
-  const filteredOptions = options.filter(
-    ([key, value]) =>
-      !selected.includes(key) &&
-      value.toLowerCase().includes(searchText.toLowerCase()),
-  );
-
   return (
     <div className="filter-section">
       <label
         htmlFor={`select-${label}`}
         className="filter-section-label"
-        onClick={() => setIsOpen(true)}
+        onClick={(e) => {
+          e.stopPropagation();
+          setIsOpen(!isOpen);
+        }}
       >
         <span>{label}</span>
-        <span className="label-chevron">›</span>
+        <span className={`label-chevron ${isOpen ? "open" : ""}`}>›</span>
       </label>
       <div className="multi-select-wrapper" ref={wrapperRef}>
         <div className="multi-select-content">
