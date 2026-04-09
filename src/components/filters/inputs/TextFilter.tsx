@@ -6,6 +6,7 @@ type TextFilterProps = {
   onChange: (keywords: string[]) => void;
   label?: string;
   placeholder?: string;
+  onClear?: () => void;
 };
 
 export function TextFilter({
@@ -13,6 +14,7 @@ export function TextFilter({
   onChange,
   label = "Keywords",
   placeholder = "Type...",
+  onClear,
 }: TextFilterProps) {
   const [inputValue, setInputValue] = useState("");
 
@@ -65,6 +67,19 @@ export function TextFilter({
           )}
         </div>
       </div>
+      {keywords.length > 0 && (
+        <button
+          onClick={() => {
+            onChange([]);
+            if (onClear) {
+              onClear();
+            }
+          }}
+          className="clear-button"
+        >
+          Clear
+        </button>
+      )}
     </div>
   );
 }

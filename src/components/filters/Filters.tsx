@@ -80,6 +80,16 @@ export function Filters({
     );
   };
 
+  const handleClearKeywords = () => {
+    const params = new URLSearchParams(window.location.search);
+    params.delete("keywords");
+    window.history.replaceState(
+      {},
+      "",
+      `${window.location.pathname}?${params}`,
+    );
+  };
+
   const handleClearAllFilters = () => {
     const params = new URLSearchParams(window.location.search);
     params.delete("countries");
@@ -112,6 +122,7 @@ export function Filters({
         <TextFilter
           keywords={keywords}
           onChange={onKeywordsChange || (() => {})}
+          onClear={handleClearKeywords}
           label="Keywords"
           placeholder="Type..."
         />

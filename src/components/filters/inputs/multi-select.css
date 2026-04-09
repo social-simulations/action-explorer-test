@@ -73,6 +73,10 @@
   box-shadow: 0 0 0 2px rgba(22, 81, 98, 0.1);
 }
 
+.multi-select-input::placeholder {
+  color: #999;
+}
+
 .multi-select-dropdown {
   position: absolute;
   top: -50px;
@@ -162,6 +166,10 @@
   outline: none;
   border-color: var(--color-green-dark);
   box-shadow: 0 0 0 2px rgba(22, 81, 98, 0.1);
+}
+
+.selected-items-input::placeholder {
+  color: #999;
 }
 
 .selected-items-list {

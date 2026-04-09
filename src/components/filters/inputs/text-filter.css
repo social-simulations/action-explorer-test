@@ -13,7 +13,7 @@
   background-color: white;
   border-radius: 0 0 4px 4px;
   box-sizing: border-box;
-  overflow: visible;
+  overflow: hidden;
 }
 
 .text-filter-input {
@@ -46,6 +46,7 @@
   padding: 8px 12px;
   background-color: white;
   border-radius: 0 0 4px 4px;
+  overflow: hidden;
 }
 
 .text-filter-tag {
@@ -82,4 +83,26 @@
 
 .text-filter-remove-btn:active {
   background-color: rgba(255, 255, 255, 0.3);
+}
+
+.clear-button {
+  margin-top: 8px;
+  padding: 0;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-red);
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+  white-space: nowrap;
+  align-self: flex-end;
+}
+
+.clear-button:hover {
+  opacity: 0.8;
+}
+
+.clear-button:active {
+  opacity: 0.6;
 }
