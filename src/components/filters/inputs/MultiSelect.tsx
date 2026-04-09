@@ -160,7 +160,10 @@ export function MultiSelect({
                         }
                       }}
                     >
-                      {value}
+                      <span>{value}</span>
+                      {selected.includes(key) && (
+                        <span className="selected-tick">✓</span>
+                      )}
                     </div>
                   ))}
               </div>

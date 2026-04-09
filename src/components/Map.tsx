@@ -193,6 +193,17 @@ export function Map({ cities = [], actions = [] }: Props) {
           action.operationalCostPerYear <= operationalCostPerYearRange[1],
       );
 
+      // Filter by keywords
+      if (keywords.length > 0) {
+        filtered = filtered.filter((action) => {
+          const actionText =
+            `${action.name} ${action.description}`.toLowerCase();
+          return keywords.every((keyword) =>
+            actionText.includes(keyword.toLowerCase()),
+          );
+        });
+      }
+
       return filtered.length;
     },
     [
@@ -200,6 +211,7 @@ export function Map({ cities = [], actions = [] }: Props) {
       selectedAreas,
       investmentCostRange,
       operationalCostPerYearRange,
+      keywords,
       cities,
       actions,
     ],
@@ -437,6 +449,7 @@ export function Map({ cities = [], actions = [] }: Props) {
     selectedAreas,
     investmentCostRange,
     operationalCostPerYearRange,
+    keywords,
     getActionCountForCity,
   ]);
 
@@ -477,12 +490,23 @@ export function Map({ cities = [], actions = [] }: Props) {
         action.operationalCostPerYear <= operationalCostPerYearRange[1],
     );
 
+    // Filter by keywords
+    if (keywords.length > 0) {
+      filtered = filtered.filter((action) => {
+        const actionText = `${action.name} ${action.description}`.toLowerCase();
+        return keywords.every((keyword) =>
+          actionText.includes(keyword.toLowerCase()),
+        );
+      });
+    }
+
     return filtered;
   }, [
     selectedCountries,
     selectedAreas,
     investmentCostRange,
     operationalCostPerYearRange,
+    keywords,
     cities,
     actions,
   ]);

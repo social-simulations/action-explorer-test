@@ -52,10 +52,10 @@ export function TextFilter({
           {keywords.length > 0 && (
             <div className="text-filter-tags">
               {keywords.map((keyword, index) => (
-                <div key={index} className="text-filter-tag">
+                <div key={index} className="item-tag">
                   <span>{keyword}</span>
                   <button
-                    className="text-filter-remove-btn"
+                    className="remove-btn"
                     onClick={() => removeKeyword(index)}
                     aria-label={`Remove ${keyword}`}
                   >
