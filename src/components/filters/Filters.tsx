@@ -2,8 +2,8 @@ import { useState, useEffect } from "react";
 import { MultiSelect } from "./inputs/MultiSelect";
 import { RangeFilter } from "./inputs/RangeFilter";
 import { TextFilter } from "./inputs/TextFilter";
-import "./filters.css";
 import { ActionArea, Country } from "../../enums";
+import "./filters.css";
 
 type FiltersProps = {
   selectedCountries: string[];
@@ -12,6 +12,10 @@ type FiltersProps = {
   onAreasChange: (areas: string[]) => void;
   keywords?: string[];
   onKeywordsChange?: (keywords: string[]) => void;
+  searchInNames?: boolean;
+  onSearchInNamesChange?: (value: boolean) => void;
+  searchInSummaries?: boolean;
+  onSearchInSummariesChange?: (value: boolean) => void;
   investmentCost?: [number, number];
   onInvestmentCostChange?: (min: number, max: number) => void;
   operationalCostPerYear?: [number, number];
@@ -27,6 +31,10 @@ export function Filters({
   onAreasChange,
   keywords = [],
   onKeywordsChange,
+  searchInNames = true,
+  onSearchInNamesChange,
+  searchInSummaries = true,
+  onSearchInSummariesChange,
   investmentCost = [0, 100],
   onInvestmentCostChange,
   operationalCostPerYear = [0, 100],
@@ -123,6 +131,10 @@ export function Filters({
           keywords={keywords}
           onChange={onKeywordsChange || (() => {})}
           onClear={handleClearKeywords}
+          searchInNames={searchInNames}
+          onSearchInNamesChange={onSearchInNamesChange}
+          searchInSummaries={searchInSummaries}
+          onSearchInSummariesChange={onSearchInSummariesChange}
           label="Keywords"
           placeholder="Type..."
         />
@@ -138,6 +150,7 @@ export function Filters({
           onChange={onAreasChange}
           label="Action Area"
         />
+        <div className="filters-divider"></div>
         <RangeFilter
           label="Investment cost"
           minValue={investCost[0]}

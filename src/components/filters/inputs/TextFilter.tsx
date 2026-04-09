@@ -7,6 +7,10 @@ type TextFilterProps = {
   label?: string;
   placeholder?: string;
   onClear?: () => void;
+  searchInNames?: boolean;
+  onSearchInNamesChange?: (value: boolean) => void;
+  searchInSummaries?: boolean;
+  onSearchInSummariesChange?: (value: boolean) => void;
 };
 
 export function TextFilter({
@@ -15,6 +19,10 @@ export function TextFilter({
   label = "Keywords",
   placeholder = "Type...",
   onClear,
+  searchInNames = true,
+  onSearchInNamesChange,
+  searchInSummaries = true,
+  onSearchInSummariesChange,
 }: TextFilterProps) {
   const [inputValue, setInputValue] = useState("");
 
@@ -67,6 +75,7 @@ export function TextFilter({
           )}
         </div>
       </div>
+
       {keywords.length > 0 && (
         <button
           onClick={() => {
@@ -80,6 +89,30 @@ export function TextFilter({
           Clear
         </button>
       )}
+      <div
+        className="text-filter-checkboxes-container"
+        style={keywords.length === 0 ? { paddingTop: "16px" } : {}}
+      >
+        <div>Search in:</div>
+        <div className="text-filter-checkboxes">
+          <label className="text-filter-checkbox-label">
+            <input
+              type="checkbox"
+              checked={searchInNames}
+              onChange={(e) => onSearchInNamesChange?.(e.target.checked)}
+            />
+            <span>Names</span>
+          </label>
+          <label className="text-filter-checkbox-label">
+            <input
+              type="checkbox"
+              checked={searchInSummaries}
+              onChange={(e) => onSearchInSummariesChange?.(e.target.checked)}
+            />
+            <span>Summaries</span>
+          </label>
+        </div>
+      </div>
     </div>
   );
 }

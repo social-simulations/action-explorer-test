@@ -26,6 +26,8 @@ export function Map({ cities = [], actions = [] }: Props) {
   const [selectedCountries, setSelectedCountries] = useState<string[]>([]);
   const [selectedAreas, setSelectedAreas] = useState<string[]>([]);
   const [keywords, setKeywords] = useState<string[]>([]);
+  const [searchInNames, setSearchInNames] = useState(true);
+  const [searchInSummaries, setSearchInSummaries] = useState(true);
   const [investmentCostRange, setInvestmentCostRange] = useState<
     [number, number]
   >([0, 992565]);
@@ -52,6 +54,8 @@ export function Map({ cities = [], actions = [] }: Props) {
     const countriesParam = params.get("countries");
     const areasParam = params.get("areas");
     const keywordsParam = params.get("keywords");
+    const searchInNamesParam = params.get("searchInNames");
+    const searchInSummariesParam = params.get("searchInSummaries");
     const investmentCostParam = params.get("investmentCost");
     const operationalCostParam = params.get("operationalCostPerYear");
     const viewParam = params.get("view");
@@ -65,6 +69,12 @@ export function Map({ cities = [], actions = [] }: Props) {
     }
     if (keywordsParam) {
       setKeywords(keywordsParam.split(","));
+    }
+    if (searchInNamesParam !== null) {
+      setSearchInNames(searchInNamesParam === "true");
+    }
+    if (searchInSummariesParam !== null) {
+      setSearchInSummaries(searchInSummariesParam === "true");
     }
     // If view=list, show list; otherwise (view=map or no view param), show map
     setView(viewParam === "list" ? "list" : "map");
@@ -117,6 +127,10 @@ export function Map({ cities = [], actions = [] }: Props) {
     if (keywords.length > 0) {
       params.set("keywords", keywords.join(","));
     }
+    if (!searchInNames || !searchInSummaries) {
+      params.set("searchInNames", String(searchInNames));
+      params.set("searchInSummaries", String(searchInSummaries));
+    }
     if (
       investmentCostRange[0] !== 0 ||
       investmentCostRange[1] !== maxValues.maxInvestmentCost
@@ -148,6 +162,8 @@ export function Map({ cities = [], actions = [] }: Props) {
     selectedCountries,
     selectedAreas,
     keywords,
+    searchInNames,
+    searchInSummaries,
     investmentCostRange,
     operationalCostPerYearRange,
     isInitialized,
@@ -194,12 +210,18 @@ export function Map({ cities = [], actions = [] }: Props) {
       );
 
       // Filter by keywords
-      if (keywords.length > 0) {
+      if (keywords.length > 0 && (searchInNames || searchInSummaries)) {
         filtered = filtered.filter((action) => {
-          const actionText =
-            `${action.name} ${action.description}`.toLowerCase();
+          let searchText = "";
+          if (searchInNames) {
+            searchText += action.name;
+          }
+          if (searchInSummaries) {
+            searchText += " " + action.description;
+          }
+          searchText = searchText.toLowerCase();
           return keywords.every((keyword) =>
-            actionText.includes(keyword.toLowerCase()),
+            searchText.includes(keyword.toLowerCase()),
           );
         });
       }
@@ -212,6 +234,8 @@ export function Map({ cities = [], actions = [] }: Props) {
       investmentCostRange,
       operationalCostPerYearRange,
       keywords,
+      searchInNames,
+      searchInSummaries,
       cities,
       actions,
     ],
@@ -450,6 +474,8 @@ export function Map({ cities = [], actions = [] }: Props) {
     investmentCostRange,
     operationalCostPerYearRange,
     keywords,
+    searchInNames,
+    searchInSummaries,
     getActionCountForCity,
   ]);
 
@@ -491,11 +517,18 @@ export function Map({ cities = [], actions = [] }: Props) {
     );
 
     // Filter by keywords
-    if (keywords.length > 0) {
+    if (keywords.length > 0 && (searchInNames || searchInSummaries)) {
       filtered = filtered.filter((action) => {
-        const actionText = `${action.name} ${action.description}`.toLowerCase();
+        let searchText = "";
+        if (searchInNames) {
+          searchText += action.name;
+        }
+        if (searchInSummaries) {
+          searchText += " " + action.description;
+        }
+        searchText = searchText.toLowerCase();
         return keywords.every((keyword) =>
-          actionText.includes(keyword.toLowerCase()),
+          searchText.includes(keyword.toLowerCase()),
         );
       });
     }
@@ -507,6 +540,8 @@ export function Map({ cities = [], actions = [] }: Props) {
     investmentCostRange,
     operationalCostPerYearRange,
     keywords,
+    searchInNames,
+    searchInSummaries,
     cities,
     actions,
   ]);
@@ -546,6 +581,10 @@ export function Map({ cities = [], actions = [] }: Props) {
           onAreasChange={setSelectedAreas}
           keywords={keywords}
           onKeywordsChange={setKeywords}
+          searchInNames={searchInNames}
+          onSearchInNamesChange={setSearchInNames}
+          searchInSummaries={searchInSummaries}
+          onSearchInSummariesChange={setSearchInSummaries}
           investmentCost={investmentCostRange}
           onInvestmentCostChange={(min, max) =>
             setInvestmentCostRange([min, max])

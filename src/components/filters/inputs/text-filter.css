@@ -37,6 +37,39 @@
   color: #999;
 }
 
+.text-filter-checkboxes-container {
+  width: 100%;
+  font-size: 14px;
+  color: var(--color-blue);
+  text-align: left;
+}
+
+.text-filter-checkboxes {
+  display: flex;
+  gap: 16px;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 8px 0 16px 0;
+  background-color: transparent;
+  flex-shrink: 0;
+  border-bottom: 1px var(--color-blue-light) solid;
+}
+
+.text-filter-checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  user-select: none;
+}
+
+.text-filter-checkbox-label input[type="checkbox"] {
+  cursor: pointer;
+  width: 16px;
+  height: 16px;
+}
+
 .text-filter-tags {
   display: flex;
   flex-wrap: wrap;
