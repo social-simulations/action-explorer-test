@@ -5,7 +5,7 @@ type MultiSelectProps = {
   selected: string[];
   onChange: (selected: string[]) => void;
   label: string;
-  placeholder: string;
+  placeholder?: string;
 };
 
 export function MultiSelect({
@@ -13,7 +13,7 @@ export function MultiSelect({
   selected,
   onChange,
   label,
-  placeholder,
+  placeholder = "No filter selected",
 }: MultiSelectProps) {
   const [searchText, setSearchText] = useState("");
   const [isOpen, setIsOpen] = useState(false);
@@ -65,17 +65,38 @@ export function MultiSelect({
 
   return (
     <div className="filter-section">
-      <label htmlFor={`select-${label}`}>{label}:</label>
+      <label htmlFor={`select-${label}`} className="filter-section-label">
+        <span>{label}</span>
+        <span className="label-chevron">›</span>
+      </label>
       <div className="multi-select-wrapper" ref={wrapperRef}>
-        <input
-          id={`select-${label}`}
-          type="text"
-          value={searchText}
-          onChange={handleSearch}
-          onFocus={() => setIsOpen(true)}
-          placeholder={placeholder}
-          className="multi-select-input"
-        />
+        <div className="multi-select-content">
+          <input
+            id={`select-${label}`}
+            type="text"
+            value={searchText}
+            onChange={handleSearch}
+            onFocus={() => setIsOpen(true)}
+            placeholder={selectedItems.length === 0 ? placeholder : ""}
+            className="multi-select-input"
+          />
+          {selectedItems.length > 0 && (
+            <div className="selected-items">
+              {selectedItems.map(({ key, value }) => (
+                <div key={key} className="item-tag">
+                  <span>{value}</span>
+                  <button
+                    onClick={() => removeItem(key)}
+                    className="remove-btn"
+                    aria-label={`Remove ${value}`}
+                  >
+                    ×
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
         {isOpen && filteredOptions.length > 0 && (
           <div className="multi-select-dropdown">
             {filteredOptions.map(([key, value]) => (
@@ -90,23 +111,6 @@ export function MultiSelect({
           </div>
         )}
       </div>
-
-      {selectedItems.length > 0 && (
-        <div className="selected-items">
-          {selectedItems.map(({ key, value }) => (
-            <div key={key} className="item-tag">
-              <span>{value}</span>
-              <button
-                onClick={() => removeItem(key)}
-                className="remove-btn"
-                aria-label={`Remove ${value}`}
-              >
-                ×
-              </button>
-            </div>
-          ))}
-        </div>
-      )}
     </div>
   );
 }

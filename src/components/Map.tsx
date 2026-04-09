@@ -505,7 +505,7 @@ export function Map({ cities = [], actions = [] }: Props) {
 
   return (
     <div className="map-container">
-      <div className="filters-wrapper">
+      <div className="map-filters-wrapper">
         <Filters
           selectedCountries={selectedCountries}
           onCountriesChange={setSelectedCountries}

@@ -94,47 +94,47 @@ export function Filters({
   };
 
   return (
-    <div className="filters-container">
-      <MultiSelect
-        options={countryEntries}
-        selected={selectedCountries}
-        onChange={onCountriesChange}
-        label="Filter by Country"
-        placeholder="Select a country..."
-      />
-      <MultiSelect
-        options={areaEntries}
-        selected={selectedAreas}
-        onChange={onAreasChange}
-        label="Filter by Action Area"
-        placeholder="Select an action area..."
-      />
-      <RangeFilter
-        label="Investment cost"
-        minValue={investCost[0]}
-        maxValue={investCost[1]}
-        maxLimit={maxInvestmentCost}
-        defaultMinValue={0}
-        defaultMaxValue={maxInvestmentCost}
-        onRangeChange={handleInvestmentCostChange}
-        onClear={handleClearInvestmentCost}
-      />
-      <RangeFilter
-        label="Operational cost/year"
-        minValue={operatingCostPerYear[0]}
-        maxValue={operatingCostPerYear[1]}
-        maxLimit={maxOperationalCostPerYear}
-        defaultMinValue={0}
-        defaultMaxValue={maxOperationalCostPerYear}
-        onRangeChange={handleOperationalCostPerYearChange}
-        onClear={handleClearOperationalCost}
-      />
-      <button
-        className="clear-all-filters-button"
-        onClick={handleClearAllFilters}
-      >
-        Clear filters
-      </button>
+    <div className="filters-wrapper">
+      <div className="filters-header">
+        <h2 className="filters-title">Filters</h2>
+        <button className="clear-all-button" onClick={handleClearAllFilters}>
+          Clear all
+        </button>
+      </div>
+      <div className="filters-container">
+        <MultiSelect
+          options={countryEntries}
+          selected={selectedCountries}
+          onChange={onCountriesChange}
+          label="Country"
+        />
+        <MultiSelect
+          options={areaEntries}
+          selected={selectedAreas}
+          onChange={onAreasChange}
+          label="Action Area"
+        />
+        <RangeFilter
+          label="Investment cost"
+          minValue={investCost[0]}
+          maxValue={investCost[1]}
+          maxLimit={maxInvestmentCost}
+          defaultMinValue={0}
+          defaultMaxValue={maxInvestmentCost}
+          onRangeChange={handleInvestmentCostChange}
+          onClear={handleClearInvestmentCost}
+        />
+        <RangeFilter
+          label="Operational cost/year"
+          minValue={operatingCostPerYear[0]}
+          maxValue={operatingCostPerYear[1]}
+          maxLimit={maxOperationalCostPerYear}
+          defaultMinValue={0}
+          defaultMaxValue={maxOperationalCostPerYear}
+          onRangeChange={handleOperationalCostPerYearChange}
+          onClear={handleClearOperationalCost}
+        />
+      </div>
     </div>
   );
 }
