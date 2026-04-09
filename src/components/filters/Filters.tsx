@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
-import { ActionArea, Country } from "../enums/enums";
-import { MultiSelect } from "./MultiSelect";
-import { RangeFilter } from "./RangeFilter";
+import { MultiSelect } from "./inputs/MultiSelect";
+import { RangeFilter } from "./inputs/RangeFilter";
 import "./filters.css";
+import { ActionArea, Country } from "../../enums";
 
 type FiltersProps = {
   selectedCountries: string[];

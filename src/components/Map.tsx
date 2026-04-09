@@ -3,11 +3,11 @@ import maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import "./map.css";
 import { Action, City } from "../types/types";
-import { Filters } from "./Filters";
-import { ActionList } from "./ActionList";
-import { ActionDetails } from "./ActionDetails";
+import { ActionList } from "./list/ActionList";
 import { getColorForCount } from "../utils/colorScale";
 import { Country, ActionArea } from "../enums/enums";
+import { Filters } from "./filters";
+import { ActionDetails } from "./details";
 
 type Props = {
   cities?: City[];
