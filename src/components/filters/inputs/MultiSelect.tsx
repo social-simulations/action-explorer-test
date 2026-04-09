@@ -29,7 +29,6 @@ export function MultiSelect({
       onChange([...selected, key]);
     }
     setSearchText("");
-    setIsOpen(false);
   };
 
   const removeItem = (itemKey: string) => {
@@ -65,23 +64,28 @@ export function MultiSelect({
 
   return (
     <div className="filter-section">
-      <label htmlFor={`select-${label}`} className="filter-section-label">
+      <label
+        htmlFor={`select-${label}`}
+        className="filter-section-label"
+        onClick={() => setIsOpen(true)}
+      >
         <span>{label}</span>
         <span className="label-chevron">›</span>
       </label>
       <div className="multi-select-wrapper" ref={wrapperRef}>
         <div className="multi-select-content">
-          <input
-            id={`select-${label}`}
-            type="text"
-            value={searchText}
-            onChange={handleSearch}
-            onFocus={() => setIsOpen(true)}
-            placeholder={selectedItems.length === 0 ? placeholder : ""}
-            className="multi-select-input"
-          />
+          {selectedItems.length === 0 && (
+            <input
+              id={`select-${label}`}
+              type="text"
+              value={searchText}
+              onChange={handleSearch}
+              placeholder={placeholder}
+              className="multi-select-input"
+            />
+          )}
           {selectedItems.length > 0 && (
-            <div className="selected-items">
+            <div className="selected-items-display">
               {selectedItems.map(({ key, value }) => (
                 <div key={key} className="item-tag">
                   <span>{value}</span>
@@ -97,17 +101,60 @@ export function MultiSelect({
             </div>
           )}
         </div>
-        {isOpen && filteredOptions.length > 0 && (
-          <div className="multi-select-dropdown">
-            {filteredOptions.map(([key, value]) => (
+        {isOpen && (
+          <div
+            className={
+              selectedItems.length > 0
+                ? "selected-items"
+                : "multi-select-dropdown"
+            }
+          >
+            <div className="selected-items-header">
+              <div className="label">{label}</div>
+              <input
+                id={`select-${label}`}
+                type="text"
+                value={searchText}
+                onChange={handleSearch}
+                placeholder="Search..."
+                className="selected-items-input"
+              />
+            </div>
+            {options.filter(([_, value]) =>
+              value.toLowerCase().includes(searchText.toLowerCase()),
+            ).length > 0 && (
               <div
-                key={key}
-                className="multi-select-option"
-                onClick={() => handleSelectOption(key)}
+                className={
+                  selectedItems.length > 0 ? "selected-items-options" : ""
+                }
               >
-                {value}
+                {options
+                  .filter(([_, value]) =>
+                    value.toLowerCase().includes(searchText.toLowerCase()),
+                  )
+                  .map(([key, value]) => (
+                    <div
+                      key={key}
+                      className={
+                        selectedItems.length > 0
+                          ? `selected-items-option ${
+                              selected.includes(key) ? "selected" : ""
+                            }`
+                          : "multi-select-option"
+                      }
+                      onClick={() => {
+                        if (selected.includes(key)) {
+                          removeItem(key);
+                        } else {
+                          handleSelectOption(key);
+                        }
+                      }}
+                    >
+                      {value}
+                    </div>
+                  ))}
               </div>
-            ))}
+            )}
           </div>
         )}
       </div>
