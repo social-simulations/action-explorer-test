@@ -37,7 +37,8 @@
 }
 
 .text-filter-input-row {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr 65px;
   align-items: center;
   gap: 8px;
   width: 100%;
