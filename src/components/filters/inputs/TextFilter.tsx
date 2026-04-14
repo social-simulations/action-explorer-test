@@ -30,11 +30,17 @@ export function TextFilter({
     setInputValue(e.target.value);
   };
 
+  const addKeyword = () => {
+    if (inputValue.trim()) {
+      onChange([...keywords, inputValue.trim()]);
+      setInputValue("");
+    }
+  };
+
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter" && inputValue.trim()) {
       e.preventDefault();
-      onChange([...keywords, inputValue.trim()]);
-      setInputValue("");
+      addKeyword();
     }
   };
 
@@ -49,14 +55,24 @@ export function TextFilter({
       </label>
       <div className="text-filter-wrapper">
         <div className="text-filter-content">
-          <input
-            type="text"
-            value={inputValue}
-            onChange={handleInputChange}
-            onKeyDown={handleKeyDown}
-            placeholder={placeholder}
-            className="text-filter-input"
-          />
+          <div className="text-filter-input-row">
+            <input
+              type="text"
+              value={inputValue}
+              onChange={handleInputChange}
+              onKeyDown={handleKeyDown}
+              placeholder={placeholder}
+              className="text-filter-input"
+            />
+            <button
+              onClick={addKeyword}
+              className="text-filter-add-button"
+              aria-label="Add keyword"
+              disabled={!inputValue.trim()}
+            >
+              Add
+            </button>
+          </div>
           {keywords.length > 0 && (
             <div className="text-filter-tags">
               {keywords.map((keyword, index) => (
