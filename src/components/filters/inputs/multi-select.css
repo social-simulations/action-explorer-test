@@ -5,7 +5,7 @@
   width: 100%;
   box-sizing: border-box;
   align-items: flex-start;
-  z-index: 10000;
+  z-index: 99;
   position: relative;
 }
 
