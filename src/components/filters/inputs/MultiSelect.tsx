@@ -166,6 +166,7 @@ export function MultiSelect({
               top: `${dropdownStyle.top}px`,
               left: `${dropdownStyle.left}px`,
             }}
+            onMouseDown={(e) => e.stopPropagation()}
           >
             <div className="selected-items-header">
               <div className="label">{label}</div>

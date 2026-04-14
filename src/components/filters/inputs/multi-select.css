@@ -121,18 +121,17 @@
 
 .selected-items {
   position: fixed;
+  display: grid;
+  grid-template-rows: 80px 1fr;
   width: 250px;
   background-color: white;
   border: 1px solid #ccc;
   border-radius: 6px;
   z-index: 100000;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  display: flex;
-  flex-direction: column;
   box-sizing: border-box;
   max-height: 300px;
-  overflow-y: auto;
-  scrollbar-gutter: stable;
+  overflow: hidden;
 }
 
 .selected-items-header {
@@ -185,6 +184,8 @@
   flex-direction: column;
   gap: 0;
   flex: 1;
+  overflow-y: auto;
+  scrollbar-gutter: stable;
 }
 
 .selected-items-option {
