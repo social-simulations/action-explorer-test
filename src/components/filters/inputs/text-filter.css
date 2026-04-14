@@ -5,20 +5,8 @@
   border-radius: 0 0 6px 6px;
 }
 
-.text-filter-content {
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-  width: 100%;
-  background-color: white;
-  border-radius: 0 0 6px 6px;
-  box-sizing: border-box;
-  overflow: hidden;
-}
-
 .text-filter-input {
   flex: 1;
-  padding: 12px 16px;
   font-size: 14px;
   border: none;
   background-color: white;
@@ -38,7 +26,7 @@
 
 .text-filter-input-row {
   display: grid;
-  grid-template-columns: 1fr 65px;
+  grid-template-columns: 1fr 60px;
   align-items: center;
   gap: 8px;
   width: 100%;
@@ -46,6 +34,7 @@
   box-sizing: border-box;
   padding: 8px 8px;
   flex-shrink: 0;
+  border-radius: 0 0 6px 6px;
 }
 
 .text-filter-add-button {

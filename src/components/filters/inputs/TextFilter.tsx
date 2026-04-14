@@ -54,42 +54,40 @@ export function TextFilter({
         <span>{label}</span>
       </label>
       <div className="text-filter-wrapper">
-        <div className="text-filter-content">
-          <div className="text-filter-input-row">
-            <input
-              type="text"
-              value={inputValue}
-              onChange={handleInputChange}
-              onKeyDown={handleKeyDown}
-              placeholder={placeholder}
-              className="text-filter-input"
-            />
-            <button
-              onClick={addKeyword}
-              className="text-filter-add-button"
-              aria-label="Add keyword"
-              disabled={!inputValue.trim()}
-            >
-              Add
-            </button>
-          </div>
-          {keywords.length > 0 && (
-            <div className="text-filter-tags">
-              {keywords.map((keyword, index) => (
-                <div key={index} className="item-tag">
-                  <span>{keyword}</span>
-                  <button
-                    className="remove-btn"
-                    onClick={() => removeKeyword(index)}
-                    aria-label={`Remove ${keyword}`}
-                  >
-                    ×
-                  </button>
-                </div>
-              ))}
-            </div>
-          )}
+        <div className="text-filter-input-row">
+          <input
+            type="text"
+            value={inputValue}
+            onChange={handleInputChange}
+            onKeyDown={handleKeyDown}
+            placeholder={placeholder}
+            className="text-filter-input"
+          />
+          <button
+            onClick={addKeyword}
+            className="text-filter-add-button"
+            aria-label="Add keyword"
+            disabled={!inputValue.trim()}
+          >
+            Add
+          </button>
         </div>
+        {keywords.length > 0 && (
+          <div className="text-filter-tags">
+            {keywords.map((keyword, index) => (
+              <div key={index} className="item-tag">
+                <span>{keyword}</span>
+                <button
+                  className="remove-btn"
+                  onClick={() => removeKeyword(index)}
+                  aria-label={`Remove ${keyword}`}
+                >
+                  ×
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       {keywords.length > 0 && (
