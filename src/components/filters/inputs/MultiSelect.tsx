@@ -109,6 +109,7 @@ export function MultiSelect({
       <label
         htmlFor={`select-${label}`}
         className="filter-section-label"
+        style={{ cursor: "pointer" }}
         onClick={(e) => {
           e.stopPropagation();
           setIsOpen(!isOpen);
