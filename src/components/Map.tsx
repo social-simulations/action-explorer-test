@@ -220,7 +220,7 @@ export function Map({ cities = [], actions = [] }: Props) {
             searchText += " " + action.description;
           }
           searchText = searchText.toLowerCase();
-          return keywords.every((keyword) =>
+          return keywords.some((keyword) =>
             searchText.includes(keyword.toLowerCase()),
           );
         });
@@ -527,7 +527,7 @@ export function Map({ cities = [], actions = [] }: Props) {
           searchText += " " + action.description;
         }
         searchText = searchText.toLowerCase();
-        return keywords.every((keyword) =>
+        return keywords.some((keyword) =>
           searchText.includes(keyword.toLowerCase()),
         );
       });
