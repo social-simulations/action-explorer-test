@@ -157,11 +157,7 @@ export function MultiSelect({
         createPortal(
           <div
             ref={dropdownRef}
-            className={
-              selectedItems.length > 0
-                ? "selected-items"
-                : "multi-select-dropdown"
-            }
+            className="selected-items"
             style={{
               top: `${dropdownStyle.top}px`,
               left: `${dropdownStyle.left}px`,
@@ -182,11 +178,7 @@ export function MultiSelect({
             {options.filter(([_, value]) =>
               value.toLowerCase().includes(searchText.toLowerCase()),
             ).length > 0 && (
-              <div
-                className={
-                  selectedItems.length > 0 ? "selected-items-options" : ""
-                }
-              >
+              <div className="selected-items-options">
                 {options
                   .filter(([_, value]) =>
                     value.toLowerCase().includes(searchText.toLowerCase()),
