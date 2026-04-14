@@ -49,7 +49,6 @@
 
 .marker-filters {
   width: 280px;
-  padding: var(--space-m);
   background-color: #fff;
 
   > div:not(:first-child) {
@@ -86,10 +85,7 @@
   .map-popup-item {
     display: grid;
     grid-template-columns: 60% auto;
-    gap: var(--space-m);
-    margin-bottom: var(--space-m);
     background-color: var(--color-green-light);
-    padding: var(--space-m);
   }
 
   .map-popup-left {
@@ -108,7 +104,6 @@
     position: absolute !important;
     top: 15px;
     right: 15px;
-    font-size: var(--space-l);
     cursor: pointer;
     z-index: 10000;
   }
@@ -121,11 +116,9 @@
 
   button {
     display: flex;
-    gap: var(--space-s);
     align-items: center;
     border: 2px var(--color-green-dark) solid;
     background-color: #fff;
-    padding: var(--space-xs) var(--space-s);
     width: 100%;
     text-align: left;
   }
@@ -140,9 +133,9 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  padding: 16px;
   background-color: rgba(108, 91, 91, 0.85);
   color: white;
-  padding: var(--space-m) var(--space-l);
   border-radius: 8px;
   font-size: 16px;
   font-weight: 500;
