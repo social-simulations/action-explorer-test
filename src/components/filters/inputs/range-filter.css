@@ -142,6 +142,7 @@
   border-radius: 4px;
   background-color: white;
   box-sizing: border-box;
+  width: inherit;
 }
 
 .number-input:focus {
