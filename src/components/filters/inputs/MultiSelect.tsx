@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import { createPortal } from "react-dom";
 import "./multi-select.css";
 
 type MultiSelectProps = {
@@ -20,7 +21,13 @@ export function MultiSelect({
 }: MultiSelectProps) {
   const [searchText, setSearchText] = useState("");
   const [isOpen, setIsOpen] = useState(false);
+  const [dropdownStyle, setDropdownStyle] = useState<{
+    top: number;
+    left: number;
+  }>({ top: 0, left: 0 });
+  const [actualMenuHeight, setActualMenuHeight] = useState(300);
   const wrapperRef = useRef<HTMLDivElement>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchText(e.target.value);
@@ -60,6 +67,38 @@ export function MultiSelect({
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
+  // Measure actual dropdown height after render
+  useEffect(() => {
+    if (isOpen && dropdownRef.current) {
+      const resizeObserver = new ResizeObserver(() => {
+        setActualMenuHeight(dropdownRef.current?.offsetHeight || 300);
+      });
+      resizeObserver.observe(dropdownRef.current);
+      return () => resizeObserver.disconnect();
+    }
+  }, [isOpen]);
+
+  // Calculate dropdown position when opening or when actual height changes
+  useEffect(() => {
+    if (isOpen && wrapperRef.current) {
+      const filterSection = wrapperRef.current.closest(".filter-section");
+      if (filterSection) {
+        const rect = filterSection.getBoundingClientRect();
+        let top = Math.round(rect.top);
+        const left = Math.round(rect.right + 8);
+
+        // Check if menu would go off bottom of screen using actual height
+        const padding = 8; // margin from screen bottom
+        if (top + actualMenuHeight > window.innerHeight - padding) {
+          // Adjust top so menu bottom has padding from screen bottom
+          top = window.innerHeight - actualMenuHeight - padding;
+        }
+
+        setDropdownStyle({ top: Math.max(0, top), left });
+      }
+    }
+  }, [isOpen, actualMenuHeight]);
 
   const selectedItems = options
     .filter(([key, _]) => selected.includes(key))
@@ -107,13 +146,25 @@ export function MultiSelect({
             </div>
           )}
         </div>
-        {isOpen && (
+      </div>
+      {selected.length > 0 && (
+        <button onClick={handleClear} className="clear-button">
+          Clear
+        </button>
+      )}
+      {isOpen &&
+        createPortal(
           <div
+            ref={dropdownRef}
             className={
               selectedItems.length > 0
                 ? "selected-items"
                 : "multi-select-dropdown"
             }
+            style={{
+              top: `${dropdownStyle.top}px`,
+              left: `${dropdownStyle.left}px`,
+            }}
           >
             <div className="selected-items-header">
               <div className="label">{label}</div>
@@ -164,14 +215,9 @@ export function MultiSelect({
                   ))}
               </div>
             )}
-          </div>
+          </div>,
+          document.body,
         )}
-      </div>
-      {selected.length > 0 && (
-        <button onClick={handleClear} className="clear-button">
-          Clear
-        </button>
-      )}
     </div>
   );
 }

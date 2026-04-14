@@ -83,18 +83,15 @@
 }
 
 .multi-select-dropdown {
-  position: absolute;
-  top: -50px;
-  left: 100%;
+  position: fixed;
   width: 250px;
   background-color: white;
   border: 1px solid #ccc;
   border-radius: 6px;
   max-height: 300px;
   overflow-y: auto;
-  z-index: 9999;
+  z-index: 100000;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  margin-left: 8px;
   scrollbar-gutter: stable;
   box-sizing: border-box;
 }
@@ -124,16 +121,13 @@
 }
 
 .selected-items {
-  position: absolute;
-  top: -50px;
-  left: 100%;
+  position: fixed;
   width: 250px;
   background-color: white;
   border: 1px solid #ccc;
   border-radius: 6px;
-  z-index: 9999;
+  z-index: 100000;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  margin-left: 8px;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;

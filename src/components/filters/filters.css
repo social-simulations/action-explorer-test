@@ -6,6 +6,8 @@
   height: 100%;
   background-color: var(--color-blue-lighter);
   overflow-y: auto;
+  position: relative;
+  z-index: 10000;
 }
 
 .filters-header {
@@ -56,7 +58,7 @@
   gap: 20px;
   width: 100%;
   box-sizing: border-box;
-  flex-shrink: 0;
+  overflow: visible;
 }
 
 .clear-all-filters-button:active {
