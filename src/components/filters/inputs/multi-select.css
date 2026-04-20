@@ -145,9 +145,8 @@
 .city-multi-select-groups {
   display: block;
   column-width: 220px;
-  column-gap: 48px;
   column-rule: 1px solid var(--color-green-dark);
-  padding: 16px 24px 24px;
+  padding: 16px 0;
   overflow-y: auto;
 }
 
