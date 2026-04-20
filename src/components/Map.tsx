@@ -24,6 +24,7 @@ export function Map({ cities = [], actions = [] }: Props) {
   const [view, setView] = useState<"map" | "list">("map");
   const [selectedActionId, setSelectedActionId] = useState<string | null>(null);
   const [selectedCountries, setSelectedCountries] = useState<string[]>([]);
+  const [selectedCities, setSelectedCities] = useState<string[]>([]);
   const [selectedAreas, setSelectedAreas] = useState<string[]>([]);
   const [keywords, setKeywords] = useState<string[]>([]);
   const [searchInNames, setSearchInNames] = useState(true);
@@ -52,6 +53,7 @@ export function Map({ cities = [], actions = [] }: Props) {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const countriesParam = params.get("countries");
+    const citiesParam = params.get("cities");
     const areasParam = params.get("areas");
     const keywordsParam = params.get("keywords");
     const searchInNamesParam = params.get("searchInNames");
@@ -63,6 +65,9 @@ export function Map({ cities = [], actions = [] }: Props) {
 
     if (countriesParam) {
       setSelectedCountries(countriesParam.split(","));
+    }
+    if (citiesParam) {
+      setSelectedCities(citiesParam.split(","));
     }
     if (areasParam) {
       setSelectedAreas(areasParam.split(","));
@@ -121,6 +126,9 @@ export function Map({ cities = [], actions = [] }: Props) {
     if (selectedCountries.length > 0) {
       params.set("countries", selectedCountries.join(","));
     }
+    if (selectedCities.length > 0) {
+      params.set("cities", selectedCities.join(","));
+    }
     if (selectedAreas.length > 0) {
       params.set("areas", selectedAreas.join(","));
     }
@@ -160,6 +168,7 @@ export function Map({ cities = [], actions = [] }: Props) {
     window.history.replaceState({}, "", newUrl);
   }, [
     selectedCountries,
+    selectedCities,
     selectedAreas,
     keywords,
     searchInNames,
@@ -174,6 +183,13 @@ export function Map({ cities = [], actions = [] }: Props) {
   // Calculate action counts per city based on selected countries and areas
   const getActionCountForCity = useCallback(
     (cityId: string | number) => {
+      if (
+        selectedCities.length > 0 &&
+        !selectedCities.includes(cityId.toString())
+      ) {
+        return 0;
+      }
+
       let filtered = actions.filter((action) => action.cityId === cityId);
 
       if (selectedCountries.length > 0) {
@@ -230,6 +246,7 @@ export function Map({ cities = [], actions = [] }: Props) {
     },
     [
       selectedCountries,
+      selectedCities,
       selectedAreas,
       investmentCostRange,
       operationalCostPerYearRange,
@@ -470,6 +487,7 @@ export function Map({ cities = [], actions = [] }: Props) {
     cities,
     actions,
     selectedCountries,
+    selectedCities,
     selectedAreas,
     investmentCostRange,
     operationalCostPerYearRange,
@@ -491,6 +509,12 @@ export function Map({ cities = [], actions = [] }: Props) {
         const cityCountry = cities.find((c) => c.id === action.cityId)?.country;
         return cityCountry && selectedCountryValues.includes(cityCountry);
       });
+    }
+
+    if (selectedCities.length > 0) {
+      filtered = filtered.filter((action) =>
+        selectedCities.includes(action.cityId.toString()),
+      );
     }
 
     if (selectedAreas.length > 0) {
@@ -536,6 +560,7 @@ export function Map({ cities = [], actions = [] }: Props) {
     return filtered;
   }, [
     selectedCountries,
+    selectedCities,
     selectedAreas,
     investmentCostRange,
     operationalCostPerYearRange,
@@ -575,8 +600,11 @@ export function Map({ cities = [], actions = [] }: Props) {
     <div className="map-container">
       <div className="map-filters-wrapper">
         <Filters
+          cities={cities}
           selectedCountries={selectedCountries}
           onCountriesChange={setSelectedCountries}
+          selectedCities={selectedCities}
+          onCitiesChange={setSelectedCities}
           selectedAreas={selectedAreas}
           onAreasChange={setSelectedAreas}
           keywords={keywords}

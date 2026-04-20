@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+import { City } from "../../types/types";
+import { CityMultiSelect } from "./inputs/CityMultiSelect";
 import { MultiSelect } from "./inputs/MultiSelect";
 import { RangeFilter } from "./inputs/RangeFilter";
 import { TextFilter } from "./inputs/TextFilter";
@@ -6,8 +8,11 @@ import { ActionArea, Country } from "../../enums";
 import "./filters.css";
 
 type FiltersProps = {
+  cities: City[];
   selectedCountries: string[];
   onCountriesChange: (countries: string[]) => void;
+  selectedCities: string[];
+  onCitiesChange: (cities: string[]) => void;
   selectedAreas: string[];
   onAreasChange: (areas: string[]) => void;
   keywords?: string[];
@@ -25,8 +30,11 @@ type FiltersProps = {
 };
 
 export function Filters({
+  cities,
   selectedCountries,
   onCountriesChange,
+  selectedCities,
+  onCitiesChange,
   selectedAreas,
   onAreasChange,
   keywords = [],
@@ -101,6 +109,7 @@ export function Filters({
   const handleClearAllFilters = () => {
     const params = new URLSearchParams(window.location.search);
     params.delete("countries");
+    params.delete("cities");
     params.delete("areas");
     params.delete("keywords");
     params.delete("investmentCost");
@@ -112,6 +121,7 @@ export function Filters({
     );
     // Also update the component state and parent callbacks
     onCountriesChange([]);
+    onCitiesChange([]);
     onAreasChange([]);
     onKeywordsChange?.([]);
     onInvestmentCostChange?.(0, maxInvestmentCost);
@@ -143,6 +153,12 @@ export function Filters({
           selected={selectedCountries}
           onChange={onCountriesChange}
           label="Country"
+        />
+        <CityMultiSelect
+          cities={cities}
+          selected={selectedCities}
+          onChange={onCitiesChange}
+          label="City"
         />
         <MultiSelect
           options={areaEntries}
