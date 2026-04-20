@@ -1,5 +1,6 @@
-import { Action } from "../types/types";
+import { Action } from "../../types/types";
 import "./action-details.css";
+import "../list/action-list.css";
 
 type ActionDetailsProps = {
   action: Action;
@@ -12,28 +13,51 @@ export function ActionDetails({
 }: ActionDetailsProps) {
   return (
     <div className="action-details">
-      <button className="action-details-return" onClick={onReturn}>
-        ← Return
-      </button>
+      <div className="action-list-header">
+        <button className="action-details-return" onClick={onReturn}>
+          <span className="action-details-return-chevron">‹</span>
+          <span>Return</span>
+        </button>
+      </div>
       <div className="action-details-content">
-        <h1>{name}</h1>
-        <div className="action-details-meta">
-          <span className="action-details-area">{area}</span>
-        </div>
-        <p className="action-details-description">{description}</p>
-        <div className="action-details-section">
-          <h2>Investment Details</h2>
-          <div className="action-details-row">
-            <span className="label">Investment Cost:</span>
-            <span className="value">${investmentCost.toLocaleString()}</span>
+        <section className="action-details-section">
+          <h2 className="action-details-section-title">City Climate Action</h2>
+          <div className="action-details-card action-details-title-card">
+            {name}
           </div>
-          <div className="action-details-row">
-            <span className="label">Operational Cost Per Year:</span>
-            <span className="value">
-              ${operationalCostPerYear.toLocaleString()}
-            </span>
+        </section>
+
+        <section className="action-details-section">
+          <h2 className="action-details-section-title">Action Description</h2>
+          <div className="action-details-card">
+            <p className="action-details-description">{description}</p>
           </div>
-        </div>
+        </section>
+
+        <section className="action-details-section">
+          <h2 className="action-details-section-title">Classifications</h2>
+          <div className="action-details-card">
+            <div className="action-details-area-row">
+              <span className="action-details-area-label">Action Areas:</span>
+              <span className="action-details-area-pill">{area}</span>
+            </div>
+          </div>
+        </section>
+
+        <section className="action-details-metrics">
+          <div className="action-details-metric">
+            <div className="action-details-metric-label">Investment cost</div>
+            <div className="action-details-metric-value">
+              ${investmentCost.toLocaleString()}
+            </div>
+          </div>
+          <div className="action-details-metric">
+            <div className="action-details-metric-label">Operational cost</div>
+            <div className="action-details-metric-value">
+              ${operationalCostPerYear.toLocaleString()}/year
+            </div>
+          </div>
+        </section>
       </div>
     </div>
   );
