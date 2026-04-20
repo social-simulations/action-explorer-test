@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Action, City } from "../../types/types";
+import { ActionListItem } from "./ActionListItem";
 import "./action-list.css";
 
 type ActionListProps = {
@@ -112,28 +113,11 @@ export function ActionList({
               {!collapsedGroups.has(group.key) && (
                 <div className="action-list-city-actions">
                   {group.actions.map((action) => (
-                    <div key={action.id} className="action-list-item">
-                      <div className="action-list-item-content">
-                        <h4>{action.name}</h4>
-                        <p className="action-list-item-area">{action.area}</p>
-                        <div className="action-list-item-costs">
-                          <span>
-                            <strong>Investment:</strong> $
-                            {action.investmentCost.toLocaleString()}
-                          </span>
-                          <span>
-                            <strong>Yearly:</strong> $
-                            {action.operationalCostPerYear.toLocaleString()}
-                          </span>
-                        </div>
-                      </div>
-                      <button
-                        className="action-details-button"
-                        onClick={() => handleDetailsClick(action.id)}
-                      >
-                        Details
-                      </button>
-                    </div>
+                    <ActionListItem
+                      key={action.id}
+                      action={action}
+                      onDetails={handleDetailsClick}
+                    />
                   ))}
                 </div>
               )}
