@@ -15,6 +15,7 @@ export function ActionList({
   onActionDetails,
 }: ActionListProps) {
   const [groupBy, setGroupBy] = useState<"city" | "area">("city");
+  const [sortBy, setSortBy] = useState<"A-Z" | "Z-A">("A-Z");
   const [collapsedGroups, setCollapsedGroups] = useState<Set<string | number>>(
     new Set(),
   );
@@ -47,9 +48,22 @@ export function ActionList({
           .map((city) => ({
             label: city.name,
             key: city.id,
-            actions: actions.filter((action) => action.cityId === city.id),
+            actions: [
+              ...actions
+                .filter((action) => action.cityId === city.id)
+                .sort((a, b) =>
+                  sortBy === "A-Z"
+                    ? a.name.localeCompare(b.name)
+                    : b.name.localeCompare(a.name),
+                ),
+            ],
           }))
           .filter((group) => group.actions.length > 0)
+          .sort((a, b) =>
+            sortBy === "A-Z"
+              ? a.label.localeCompare(b.label)
+              : b.label.localeCompare(a.label),
+          )
       : // Group by area
         Object.entries(
           actions.reduce(
@@ -66,16 +80,32 @@ export function ActionList({
           .map(([area, areaActions]) => ({
             label: area,
             key: area,
-            actions: areaActions,
+            actions: [...areaActions].sort((a, b) =>
+              sortBy === "A-Z"
+                ? a.name.localeCompare(b.name)
+                : b.name.localeCompare(a.name),
+            ),
           }))
-          .sort((a, b) => a.label.localeCompare(b.label));
+          .sort((a, b) =>
+            sortBy === "A-Z"
+              ? a.label.localeCompare(b.label)
+              : b.label.localeCompare(a.label),
+          );
 
   return (
     <div className="action-list">
       <div className="action-list-header">
         <div className="action-list-header-top">
-          <p className="action-list-count">{actions.length} actions</p>
           <div className="action-list-header-controls">
+            <label htmlFor="sort-by-select">Sort by:</label>
+            <select
+              id="sort-by-select"
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value as "A-Z" | "Z-A")}
+            >
+              <option value="A-Z">A-Z</option>
+              <option value="Z-A">Z-A</option>
+            </select>
             <label htmlFor="group-by-select">Group by:</label>
             <select
               id="group-by-select"

@@ -9,8 +9,8 @@
 }
 
 .action-list-header {
-  padding: 20px;
-  border-bottom: 1px solid #e0e0e0;
+  padding: 12px 14px;
+  border-bottom: 2px solid #b8d2dc;
   flex-shrink: 0;
   position: sticky;
   top: 0;
@@ -20,41 +20,37 @@
 
 .action-list-header-top {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
-  gap: 20px;
-}
-
-.action-list-count {
-  margin: 0;
-  font-size: 18px;
-  font-weight: 600;
-  color: #333;
-  flex: 1;
-  text-align: center;
+  padding-left: 115px;
+  gap: 12px;
 }
 
 .action-list-header-controls {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   flex-shrink: 0;
+  padding: 3px 10px;
+  border-radius: 8px;
+  background-color: var(--color-green-light);
 }
 
 .action-list-header-controls label {
-  font-size: 13px;
-  color: #666;
-  font-weight: 500;
+  font-size: 16px;
+  color: #175162;
+  font-weight: 700;
   white-space: nowrap;
 }
 
 .action-list-header-controls select {
-  padding: 4px 8px;
-  font-size: 13px;
-  border: 1px solid #ddd;
-  border-radius: 3px;
+  min-width: 120px;
+  padding: 4px 10px;
+  font-size: 14px;
+  border: 1px solid #b8d2dc;
+  border-radius: 6px;
   background-color: #fff;
-  color: #333;
+  color: #4f7f90;
   cursor: pointer;
   transition: border-color 0.2s;
 }
@@ -65,8 +61,8 @@
 
 .action-list-header-controls select:focus {
   outline: none;
-  border-color: #4CAF50;
-  box-shadow: 0 0 4px rgba(76, 175, 80, 0.3);
+  border-color: #175162;
+  box-shadow: 0 0 0 2px rgba(23, 81, 98, 0.12);
 }
 
 .action-list-content {
@@ -104,7 +100,7 @@
 }
 
 .action-list-city-group:first-child {
-  padding-top: 0;
+  padding-top: 10px;
 }
 
 .action-list-city-header {
