@@ -629,7 +629,7 @@ export function Map({ cities = [], actions = [] }: Props) {
         className="view-toggle-button"
         onClick={() => setView(view === "map" ? "list" : "map")}
       >
-        {view === "map" ? "📋 List" : "🗺️ Map"}
+        {view === "map" ? "Show list" : "Show map"}
       </button>
       {view === "map" ? (
         <div className="map" id="map" ref={mapContainerRef}>
