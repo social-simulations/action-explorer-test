@@ -160,6 +160,7 @@ export function Filters({
           onChange={onCitiesChange}
           label="City"
         />
+        <div className="filters-divider"></div>
         <MultiSelect
           options={areaEntries}
           selected={selectedAreas}

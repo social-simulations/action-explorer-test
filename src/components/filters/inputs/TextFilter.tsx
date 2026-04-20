@@ -50,7 +50,10 @@ export function TextFilter({
 
   return (
     <div className="filter-section">
-      <label className="filter-section-label">
+      <label
+        className="filter-section-label"
+        style={{ backgroundColor: "var(--color-green-light)" }}
+      >
         <span>{label}</span>
       </label>
       <div className="text-filter-wrapper">
