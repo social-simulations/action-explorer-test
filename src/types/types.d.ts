@@ -9,9 +9,11 @@ export type City = {
 export type Action = {
   id: string | number;
   name: string;
+  summary?: string;
+  ghgReductionBy2030?: number | string | null;
   cityId: string | number;
   area: string;
   investmentCost: number;
   operationalCostPerYear: number;
-  description: string;
+  description?: string;
 };

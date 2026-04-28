@@ -233,7 +233,7 @@ export function Map({ cities = [], actions = [] }: Props) {
             searchText += action.name;
           }
           if (searchInSummaries) {
-            searchText += " " + action.description;
+            searchText += ` ${action.summary ?? action.description ?? ""}`;
           }
           searchText = searchText.toLowerCase();
           return keywords.some((keyword) =>
@@ -548,7 +548,7 @@ export function Map({ cities = [], actions = [] }: Props) {
           searchText += action.name;
         }
         if (searchInSummaries) {
-          searchText += " " + action.description;
+          searchText += ` ${action.summary ?? action.description ?? ""}`;
         }
         searchText = searchText.toLowerCase();
         return keywords.some((keyword) =>

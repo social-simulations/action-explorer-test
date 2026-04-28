@@ -8,7 +8,14 @@ type ActionDetailsProps = {
 };
 
 export function ActionDetails({
-  action: { name, area, description, investmentCost, operationalCostPerYear },
+  action: {
+    name,
+    area,
+    summary,
+    description,
+    investmentCost,
+    operationalCostPerYear,
+  },
   onReturn,
 }: ActionDetailsProps) {
   return (
@@ -30,7 +37,9 @@ export function ActionDetails({
         <section className="action-details-section">
           <h2 className="action-details-section-title">Action Description</h2>
           <div className="action-details-card">
-            <p className="action-details-description">{description}</p>
+            <p className="action-details-description">
+              {summary || description || "No summary provided."}
+            </p>
           </div>
         </section>
 
