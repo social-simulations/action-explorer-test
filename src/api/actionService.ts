@@ -1,6 +1,5 @@
 import { Action, City } from "../types/types";
 import { ActionArea } from "../enums";
-import { cities as fallbackCities } from "../data/cities";
 
 const API_BASE_URL =
   process.env.REACT_APP_API_BASE_URL || "http://localhost:5000/api";
@@ -51,6 +50,19 @@ function asNumber(value: unknown, fallback = 0): number {
   return fallback;
 }
 
+function asNullableNumberOrString(value: unknown): number | string | null {
+  if (value === null || value === undefined) {
+    return null;
+  }
+  if (typeof value === "number" && Number.isFinite(value)) {
+    return value;
+  }
+  if (typeof value === "string") {
+    return value;
+  }
+  return null;
+}
+
 function mapArea(raw: unknown): string {
   const normalized = asString(raw).trim().toLowerCase();
   if (!normalized) {
@@ -78,26 +90,12 @@ function mapCities(rawCities: unknown[]): City[] {
     const id = (city.id ?? city.city_id ?? index + 1) as string | number;
     const name = asString(city.name ?? city.city_name, `City ${index + 1}`);
 
-    const fallbackById = fallbackCities.find(
-      (c) => c.id.toString() === id.toString(),
-    );
-    const fallbackByName = fallbackCities.find(
-      (c) => c.name.toLowerCase() === name.toLowerCase(),
-    );
-    const fallbackCity = fallbackById || fallbackByName;
-
     return {
       id,
       name,
-      latitude: asNumber(
-        city.latitude ?? city.lat,
-        fallbackCity?.latitude ?? 0,
-      ),
-      longitude: asNumber(
-        city.longitude ?? city.lng ?? city.lon,
-        fallbackCity?.longitude ?? 0,
-      ),
-      country: asString(city.country, fallbackCity?.country ?? ""),
+      latitude: asNumber(city.latitude ?? city.lat),
+      longitude: asNumber(city.longitude ?? city.lng ?? city.lon),
+      country: asString(city.country),
     };
   });
 }
@@ -127,8 +125,9 @@ function mapActions(rawActions: unknown[], cities: City[]): Action[] {
       name: asString(action.name, `Action ${index + 1}`),
       summary,
       description: summary,
-      ghgReductionBy2030:
+      ghgReductionBy2030: asNullableNumberOrString(
         action.ghg_reduction_by_2030 ?? action.ghgReductionBy2030,
+      ),
       cityId: resolvedCityId,
       area: mapArea(action.thematic_area ?? action.area),
       investmentCost: asNumber(action.investment_cost ?? action.investmentCost),
