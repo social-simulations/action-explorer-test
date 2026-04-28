@@ -1,20 +1,26 @@
 import { useState, useEffect } from "react";
-import { City } from "../../types/types";
+import { City, Tag, ThematicArea } from "../../types/types";
 import { CityMultiSelect } from "./inputs/CityMultiSelect";
 import { MultiSelect } from "./inputs/MultiSelect";
 import { RangeFilter } from "./inputs/RangeFilter";
 import { TextFilter } from "./inputs/TextFilter";
-import { ActionArea, Country } from "../../enums";
+import { Country } from "../../enums";
 import "./filters.css";
 
 type FiltersProps = {
   cities: City[];
+  tags: Tag[];
+  thematicAreas: ThematicArea[];
   selectedCountries: string[];
   onCountriesChange: (countries: string[]) => void;
   selectedCities: string[];
   onCitiesChange: (cities: string[]) => void;
+  selectedTags: string[];
+  onTagsChange: (tags: string[]) => void;
   selectedAreas: string[];
   onAreasChange: (areas: string[]) => void;
+  selectedLevers: string[];
+  onLeversChange: (levers: string[]) => void;
   keywords?: string[];
   onKeywordsChange?: (keywords: string[]) => void;
   searchInNames?: boolean;
@@ -31,12 +37,18 @@ type FiltersProps = {
 
 export function Filters({
   cities,
+  tags,
+  thematicAreas,
   selectedCountries,
   onCountriesChange,
   selectedCities,
   onCitiesChange,
+  selectedTags,
+  onTagsChange,
   selectedAreas,
   onAreasChange,
+  selectedLevers,
+  onLeversChange,
   keywords = [],
   onKeywordsChange,
   searchInNames = true,
@@ -51,7 +63,12 @@ export function Filters({
   maxOperationalCostPerYear = 50000,
 }: FiltersProps) {
   const countryEntries = Object.entries(Country);
-  const areaEntries = Object.entries(ActionArea);
+  const tagEntries = tags.map(
+    (tag) => [tag.id.toString(), tag.name] as [string, string],
+  );
+  const areaEntries = thematicAreas.map(
+    (area) => [area.id.toString(), area.name] as [string, string],
+  );
   const [investCost, setInvestCost] = useState(investmentCost);
   const [operatingCostPerYear, setOperatingCostPerYear] = useState(
     operationalCostPerYear,
@@ -110,7 +127,9 @@ export function Filters({
     const params = new URLSearchParams(window.location.search);
     params.delete("countries");
     params.delete("cities");
+    params.delete("tags");
     params.delete("areas");
+    params.delete("levers");
     params.delete("keywords");
     params.delete("investmentCost");
     params.delete("operationalCostPerYear");
@@ -122,7 +141,9 @@ export function Filters({
     // Also update the component state and parent callbacks
     onCountriesChange([]);
     onCitiesChange([]);
+    onTagsChange([]);
     onAreasChange([]);
+    onLeversChange([]);
     onKeywordsChange?.([]);
     onInvestmentCostChange?.(0, maxInvestmentCost);
     onOperationalCostPerYearChange?.(0, maxOperationalCostPerYear);
@@ -162,10 +183,22 @@ export function Filters({
         />
         <div className="filters-divider"></div>
         <MultiSelect
+          options={tagEntries}
+          selected={selectedTags}
+          onChange={onTagsChange}
+          label="Thematic Tag"
+        />
+        <MultiSelect
           options={areaEntries}
           selected={selectedAreas}
           onChange={onAreasChange}
-          label="Action Area"
+          label="Field of Action"
+        />
+        <MultiSelect
+          options={areaEntries}
+          selected={selectedLevers}
+          onChange={onLeversChange}
+          label="Systemic Lever"
         />
         <div className="filters-divider"></div>
         <RangeFilter

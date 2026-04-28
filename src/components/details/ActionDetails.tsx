@@ -1,23 +1,54 @@
-import { Action } from "../../types/types";
+import { Action, Tag, ThematicArea } from "../../types/types";
 import "./action-details.css";
 import "../list/action-list.css";
 
 type ActionDetailsProps = {
   action: Action;
+  tags: Tag[];
+  thematicAreas: ThematicArea[];
   onReturn: () => void;
 };
 
 export function ActionDetails({
   action: {
     name,
-    area,
     summary,
     description,
     investmentCost,
     operationalCostPerYear,
+    tagIds,
+    thematicAreasLever,
+    thematicAreasNonLever,
   },
+  tags,
+  thematicAreas,
   onReturn,
 }: ActionDetailsProps) {
+  const tagLabels = (tagIds ?? [])
+    .map(
+      (tagId) =>
+        tags.find((tag) => tag.id.toString() === tagId.toString())?.name,
+    )
+    .filter((label): label is string => Boolean(label));
+
+  const systemicLeverLabels = (thematicAreasLever ?? [])
+    .map(
+      (leverId) =>
+        thematicAreas.find(
+          (thematicArea) => thematicArea.id.toString() === leverId.toString(),
+        )?.name,
+    )
+    .filter((label): label is string => Boolean(label));
+
+  const fieldOfActionLabels = (thematicAreasNonLever ?? [])
+    .map(
+      (areaId) =>
+        thematicAreas.find(
+          (thematicArea) => thematicArea.id.toString() === areaId.toString(),
+        )?.name,
+    )
+    .filter((label): label is string => Boolean(label));
+
   return (
     <div className="action-details">
       <div className="action-list-header">
@@ -47,8 +78,48 @@ export function ActionDetails({
           <h2 className="action-details-section-title">Classifications</h2>
           <div className="action-details-card">
             <div className="action-details-area-row">
-              <span className="action-details-area-label">Action Areas:</span>
-              <span className="action-details-area-pill">{area}</span>
+              <span className="action-details-area-label">Tags:</span>
+              <span className="action-details-area-pill-container">
+                {tagLabels.length > 0 ? (
+                  tagLabels.map((label) => (
+                    <span key={label} className="action-details-area-pill">
+                      {label}
+                    </span>
+                  ))
+                ) : (
+                  <span className="action-details-area-pill">-</span>
+                )}
+              </span>
+            </div>
+            <div className="action-details-area-row">
+              <span className="action-details-area-label">Systemic Lever:</span>
+              <span className="action-details-area-pill-container">
+                {systemicLeverLabels.length > 0 ? (
+                  systemicLeverLabels.map((label) => (
+                    <span key={label} className="action-details-area-pill">
+                      {label}
+                    </span>
+                  ))
+                ) : (
+                  <span className="action-details-area-pill">-</span>
+                )}
+              </span>
+            </div>
+            <div className="action-details-area-row">
+              <span className="action-details-area-label">
+                Fields of Action:
+              </span>
+              <span className="action-details-area-pill-container">
+                {fieldOfActionLabels.length > 0 ? (
+                  fieldOfActionLabels.map((label) => (
+                    <span key={label} className="action-details-area-pill">
+                      {label}
+                    </span>
+                  ))
+                ) : (
+                  <span className="action-details-area-pill">-</span>
+                )}
+              </span>
             </div>
           </div>
         </section>

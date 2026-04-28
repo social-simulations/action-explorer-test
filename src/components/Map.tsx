@@ -5,7 +5,7 @@ import "./map.css";
 import { Action, City, Tag, ThematicArea } from "../types/types";
 import { ActionList } from "./list/ActionList";
 import { createColorScaleModel } from "../utils/colorScale";
-import { Country, ActionArea } from "../enums/enums";
+import { Country } from "../enums/enums";
 import { Filters } from "./filters";
 import { ActionDetails } from "./details";
 
@@ -22,7 +22,6 @@ export function Map({
   tags = [],
   thematicAreas = [],
 }: Props) {
-  console.log(tags, thematicAreas);
   const mapRef = useRef<maplibregl.Map | null>(null);
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const tooltipTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -34,7 +33,9 @@ export function Map({
   const [selectedActionId, setSelectedActionId] = useState<string | null>(null);
   const [selectedCountries, setSelectedCountries] = useState<string[]>([]);
   const [selectedCities, setSelectedCities] = useState<string[]>([]);
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [selectedAreas, setSelectedAreas] = useState<string[]>([]);
+  const [selectedLevers, setSelectedLevers] = useState<string[]>([]);
   const [keywords, setKeywords] = useState<string[]>([]);
   const [searchInNames, setSearchInNames] = useState(true);
   const [searchInSummaries, setSearchInSummaries] = useState(true);
@@ -63,7 +64,9 @@ export function Map({
     const params = new URLSearchParams(window.location.search);
     const countriesParam = params.get("countries");
     const citiesParam = params.get("cities");
+    const tagsParam = params.get("tags");
     const areasParam = params.get("areas");
+    const leversParam = params.get("levers");
     const keywordsParam = params.get("keywords");
     const searchInNamesParam = params.get("searchInNames");
     const searchInSummariesParam = params.get("searchInSummaries");
@@ -78,8 +81,14 @@ export function Map({
     if (citiesParam) {
       setSelectedCities(citiesParam.split(","));
     }
+    if (tagsParam) {
+      setSelectedTags(tagsParam.split(","));
+    }
     if (areasParam) {
       setSelectedAreas(areasParam.split(","));
+    }
+    if (leversParam) {
+      setSelectedLevers(leversParam.split(","));
     }
     if (keywordsParam) {
       setKeywords(keywordsParam.split(","));
@@ -138,8 +147,14 @@ export function Map({
     if (selectedCities.length > 0) {
       params.set("cities", selectedCities.join(","));
     }
+    if (selectedTags.length > 0) {
+      params.set("tags", selectedTags.join(","));
+    }
     if (selectedAreas.length > 0) {
       params.set("areas", selectedAreas.join(","));
+    }
+    if (selectedLevers.length > 0) {
+      params.set("levers", selectedLevers.join(","));
     }
     if (keywords.length > 0) {
       params.set("keywords", keywords.join(","));
@@ -178,7 +193,9 @@ export function Map({
   }, [
     selectedCountries,
     selectedCities,
+    selectedTags,
     selectedAreas,
+    selectedLevers,
     keywords,
     searchInNames,
     searchInSummaries,
@@ -212,11 +229,26 @@ export function Map({
       }
 
       if (selectedAreas.length > 0) {
-        const selectedAreaValues = selectedAreas.map(
-          (key) => ActionArea[key as keyof typeof ActionArea],
-        ) as string[];
         filtered = filtered.filter((action) =>
-          selectedAreaValues.includes(action.area),
+          (action.thematicAreasNonLever ?? []).some((areaId) =>
+            selectedAreas.includes(areaId.toString()),
+          ),
+        );
+      }
+
+      if (selectedTags.length > 0) {
+        filtered = filtered.filter((action) =>
+          (action.tagIds ?? []).some((tagId) =>
+            selectedTags.includes(tagId.toString()),
+          ),
+        );
+      }
+
+      if (selectedLevers.length > 0) {
+        filtered = filtered.filter((action) =>
+          (action.thematicAreasLever ?? []).some((leverId) =>
+            selectedLevers.includes(leverId.toString()),
+          ),
         );
       }
 
@@ -256,7 +288,9 @@ export function Map({
     [
       selectedCountries,
       selectedCities,
+      selectedTags,
       selectedAreas,
+      selectedLevers,
       investmentCostRange,
       operationalCostPerYearRange,
       keywords,
@@ -513,7 +547,9 @@ export function Map({
     actions,
     selectedCountries,
     selectedCities,
+    selectedTags,
     selectedAreas,
+    selectedLevers,
     investmentCostRange,
     operationalCostPerYearRange,
     keywords,
@@ -544,11 +580,26 @@ export function Map({
     }
 
     if (selectedAreas.length > 0) {
-      const selectedAreaValues = selectedAreas.map(
-        (key) => ActionArea[key as keyof typeof ActionArea],
-      ) as string[];
       filtered = filtered.filter((action) =>
-        selectedAreaValues.includes(action.area),
+        (action.thematicAreasNonLever ?? []).some((areaId) =>
+          selectedAreas.includes(areaId.toString()),
+        ),
+      );
+    }
+
+    if (selectedTags.length > 0) {
+      filtered = filtered.filter((action) =>
+        (action.tagIds ?? []).some((tagId) =>
+          selectedTags.includes(tagId.toString()),
+        ),
+      );
+    }
+
+    if (selectedLevers.length > 0) {
+      filtered = filtered.filter((action) =>
+        (action.thematicAreasLever ?? []).some((leverId) =>
+          selectedLevers.includes(leverId.toString()),
+        ),
       );
     }
 
@@ -587,7 +638,9 @@ export function Map({
   }, [
     selectedCountries,
     selectedCities,
+    selectedTags,
     selectedAreas,
+    selectedLevers,
     investmentCostRange,
     operationalCostPerYearRange,
     keywords,
@@ -617,6 +670,8 @@ export function Map({
     return (
       <ActionDetails
         action={selectedAction}
+        tags={tags}
+        thematicAreas={thematicAreas}
         onReturn={handleReturnFromDetails}
       />
     );
@@ -627,12 +682,18 @@ export function Map({
       <div className="map-filters-wrapper">
         <Filters
           cities={cities}
+          tags={tags}
+          thematicAreas={thematicAreas}
           selectedCountries={selectedCountries}
           onCountriesChange={setSelectedCountries}
           selectedCities={selectedCities}
           onCitiesChange={setSelectedCities}
+          selectedTags={selectedTags}
+          onTagsChange={setSelectedTags}
           selectedAreas={selectedAreas}
           onAreasChange={setSelectedAreas}
+          selectedLevers={selectedLevers}
+          onLeversChange={setSelectedLevers}
           keywords={keywords}
           onKeywordsChange={setKeywords}
           searchInNames={searchInNames}

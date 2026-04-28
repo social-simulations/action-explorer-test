@@ -76,6 +76,10 @@
   gap: 12px;
 }
 
+.action-details-area-row + .action-details-area-row {
+  margin-top: 10px;
+}
+
 .action-details-area-label {
   font-size: 14px;
   font-weight: 600;
@@ -91,6 +95,12 @@
   font-size: 13px;
   border-radius: 4px;
   padding: 6px 12px;
+}
+
+.action-details-area-pill-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
 .action-details-metrics {

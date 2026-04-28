@@ -26,4 +26,7 @@ export type Action = {
   investmentCost: number;
   operationalCostPerYear: number;
   description?: string;
+  tagIds?: Array<string | number>;
+  thematicAreasLever?: Array<string | number>;
+  thematicAreasNonLever?: Array<string | number>;
 };

@@ -63,6 +63,81 @@ function asNullableNumberOrString(value: unknown): number | string | null {
   return null;
 }
 
+function asIdArray(value: unknown): Array<string | number> {
+  if (value === null || value === undefined) {
+    return [];
+  }
+
+  if (Array.isArray(value)) {
+    const ids: Array<string | number> = [];
+
+    value.forEach((item) => {
+      if (typeof item === "string") {
+        const parts = item.includes(",") ? item.split(",") : [item];
+        parts
+          .map((part) => part.trim())
+          .filter(Boolean)
+          .forEach((part) => ids.push(part));
+        return;
+      }
+
+      if (typeof item === "number" && Number.isFinite(item)) {
+        ids.push(item);
+        return;
+      }
+
+      if (item && typeof item === "object") {
+        const record = item as UnknownRecord;
+        const nestedId =
+          record.id ??
+          record.thematic_area_id ??
+          record.thematicAreaId ??
+          record.tag_id ??
+          record.tagId;
+
+        if (typeof nestedId === "number" && Number.isFinite(nestedId)) {
+          ids.push(nestedId);
+          return;
+        }
+
+        if (typeof nestedId === "string") {
+          const trimmed = nestedId.trim();
+          if (trimmed) {
+            ids.push(trimmed);
+          }
+        }
+      }
+    });
+
+    return ids;
+  }
+
+  if (typeof value === "string") {
+    return value
+      .split(",")
+      .map((part) => part.trim())
+      .filter(Boolean);
+  }
+
+  if (typeof value === "number" && Number.isFinite(value)) {
+    return [value];
+  }
+
+  if (value && typeof value === "object") {
+    const record = value as UnknownRecord;
+    const id = record.id ?? record.thematic_area_id ?? record.tag_id;
+
+    if (typeof id === "number" && Number.isFinite(id)) {
+      return [id];
+    }
+    if (typeof id === "string") {
+      return id.trim() ? [id.trim()] : [];
+    }
+  }
+
+  return [];
+}
+
 function mapArea(raw: unknown): string {
   const normalized = asString(raw).trim().toLowerCase();
   if (!normalized) {
@@ -115,7 +190,7 @@ function mapThematicAreas(rawAreas: unknown[]): ThematicArea[] {
     const area = rawArea as UnknownRecord;
     return {
       id: (area.id ?? area.area_id ?? index + 1) as string | number,
-      name: asString(area.title),
+      name: asString(area.name ?? area.title, `Area ${index + 1}`),
     };
   });
 }
@@ -155,6 +230,13 @@ function mapActions(rawActions: unknown[], cities: City[]): Action[] {
         action.operational_cost_year ??
           action.operational_cost_per_year ??
           action.operationalCostPerYear,
+      ),
+      tagIds: asIdArray(action.tag_ids ?? action.tagIds),
+      thematicAreasLever: asIdArray(
+        action.thematic_areas_lever ?? action.thematicAreasLever,
+      ),
+      thematicAreasNonLever: asIdArray(
+        action.thematic_areas_non_lever ?? action.thematicAreasNonLever,
       ),
     };
   });
