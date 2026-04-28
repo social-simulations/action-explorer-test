@@ -2,7 +2,7 @@ import { useEffect, useState, useRef, useCallback, useMemo } from "react";
 import maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import "./map.css";
-import { Action, City } from "../types/types";
+import { Action, City, Tag, ThematicArea } from "../types/types";
 import { ActionList } from "./list/ActionList";
 import { createColorScaleModel } from "../utils/colorScale";
 import { Country, ActionArea } from "../enums/enums";
@@ -12,9 +12,17 @@ import { ActionDetails } from "./details";
 type Props = {
   cities?: City[];
   actions?: Action[];
+  tags?: Tag[];
+  thematicAreas?: ThematicArea[];
 };
 
-export function Map({ cities = [], actions = [] }: Props) {
+export function Map({
+  cities = [],
+  actions = [],
+  tags = [],
+  thematicAreas = [],
+}: Props) {
+  console.log(tags, thematicAreas);
   const mapRef = useRef<maplibregl.Map | null>(null);
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const tooltipTimeoutRef = useRef<NodeJS.Timeout | null>(null);

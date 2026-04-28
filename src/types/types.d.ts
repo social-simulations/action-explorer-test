@@ -6,6 +6,16 @@ export type City = {
   country: string;
 };
 
+export type Tag = {
+  id: string | number;
+  name: string;
+};
+
+export type ThematicArea = {
+  id: string | number;
+  name: string;
+};
+
 export type Action = {
   id: string | number;
   name: string;

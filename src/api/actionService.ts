@@ -1,4 +1,4 @@
-import { Action, City } from "../types/types";
+import { Action, City, Tag, ThematicArea } from "../types/types";
 import { ActionArea } from "../enums";
 
 const API_BASE_URL =
@@ -100,6 +100,26 @@ function mapCities(rawCities: unknown[]): City[] {
   });
 }
 
+function mapTags(rawTags: unknown[]): Tag[] {
+  return rawTags.map((rawTag, index) => {
+    const tag = rawTag as UnknownRecord;
+    return {
+      id: (tag.id ?? tag.tag_id ?? index + 1) as string | number,
+      name: asString(tag.name ?? tag.tag_name, `Tag ${index + 1}`),
+    };
+  });
+}
+
+function mapThematicAreas(rawAreas: unknown[]): ThematicArea[] {
+  return rawAreas.map((rawArea, index) => {
+    const area = rawArea as UnknownRecord;
+    return {
+      id: (area.id ?? area.area_id ?? index + 1) as string | number,
+      name: asString(area.title),
+    };
+  });
+}
+
 function mapActions(rawActions: unknown[], cities: City[]): Action[] {
   return rawActions.map((rawAction, index) => {
     const action = rawAction as UnknownRecord;
@@ -143,17 +163,28 @@ function mapActions(rawActions: unknown[], cities: City[]): Action[] {
 export async function fetchActionExplorerData(): Promise<{
   cities: City[];
   actions: Action[];
+  tags: Tag[];
+  thematicAreas: ThematicArea[];
 }> {
-  const [citiesPayload, actionsPayload] = await Promise.all([
-    fetchApiJson("/cities"),
-    fetchApiJson("/actions"),
-  ]);
+  const [citiesPayload, actionsPayload, tagsPayload, thematicAreasPayload] =
+    await Promise.all([
+      fetchApiJson("/cities"),
+      fetchApiJson("/actions"),
+      fetchApiJson("/tags"),
+      fetchApiJson("/thematic-areas"),
+    ]);
 
   const mappedCities = mapCities(extractArray(citiesPayload));
   const mappedActions = mapActions(extractArray(actionsPayload), mappedCities);
+  const mappedTags = mapTags(extractArray(tagsPayload));
+  const mappedThematicAreas = mapThematicAreas(
+    extractArray(thematicAreasPayload),
+  );
 
   return {
     cities: mappedCities,
     actions: mappedActions,
+    tags: mappedTags,
+    thematicAreas: mappedThematicAreas,
   };
 }
