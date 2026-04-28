@@ -22,6 +22,22 @@ export function Map({
   tags = [],
   thematicAreas = [],
 }: Props) {
+  const getGhgReductionValue = (action: Action): number => {
+    const raw = action.ghgReductionBy2030;
+
+    if (typeof raw === "number" && Number.isFinite(raw)) {
+      return raw;
+    }
+
+    if (typeof raw === "string") {
+      const normalized = raw.replace(/,/g, ".").replace(/[^0-9.-]/g, "");
+      const parsed = Number(normalized);
+      return Number.isFinite(parsed) ? parsed : 0;
+    }
+
+    return 0;
+  };
+
   const mapRef = useRef<maplibregl.Map | null>(null);
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const tooltipTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -44,19 +60,29 @@ export function Map({
   >([0, 992565]);
   const [operationalCostPerYearRange, setOperationalCostPerYearRange] =
     useState<[number, number]>([0, 49566]);
+  const [ghgReductionBy2030Range, setGhgReductionBy2030Range] = useState<
+    [number, number]
+  >([0, 100]);
   const [isInitialized, setIsInitialized] = useState(false);
 
   // Calculate max values for investment cost and operational cost per year
   const maxValues = useMemo(() => {
     if (actions.length === 0)
-      return { maxInvestmentCost: 992565, maxOperationalCost: 49566 };
+      return {
+        maxInvestmentCost: 992565,
+        maxOperationalCost: 49566,
+        maxGhgReductionBy2030: 100,
+      };
     const maxInvestmentCost = Math.max(
       ...actions.map((a) => a.investmentCost || 0),
     );
     const maxOperationalCost = Math.max(
       ...actions.map((a) => a.operationalCostPerYear || 0),
     );
-    return { maxInvestmentCost, maxOperationalCost };
+    const maxGhgReductionBy2030 = Math.max(
+      ...actions.map((action) => getGhgReductionValue(action)),
+    );
+    return { maxInvestmentCost, maxOperationalCost, maxGhgReductionBy2030 };
   }, [actions]);
 
   // Initialize state from query params on component mount
@@ -72,6 +98,7 @@ export function Map({
     const searchInSummariesParam = params.get("searchInSummaries");
     const investmentCostParam = params.get("investmentCost");
     const operationalCostParam = params.get("operationalCostPerYear");
+    const ghgReductionParam = params.get("ghgReductionBy2030");
     const viewParam = params.get("view");
     const actionIdParam = params.get("actionId");
 
@@ -117,6 +144,11 @@ export function Map({
       setOperationalCostPerYearRange([min, max]);
     }
 
+    if (ghgReductionParam) {
+      const [min, max] = ghgReductionParam.split(",").map(Number);
+      setGhgReductionBy2030Range([min, max]);
+    }
+
     setIsInitialized(true);
   }, []);
 
@@ -133,6 +165,10 @@ export function Map({
 
     if (!params.get("operationalCostPerYear")) {
       setOperationalCostPerYearRange([0, maxValues.maxOperationalCost]);
+    }
+
+    if (!params.get("ghgReductionBy2030")) {
+      setGhgReductionBy2030Range([0, maxValues.maxGhgReductionBy2030]);
     }
   }, [maxValues, isInitialized]);
 
@@ -181,6 +217,15 @@ export function Map({
         `${operationalCostPerYearRange[0]},${operationalCostPerYearRange[1]}`,
       );
     }
+    if (
+      ghgReductionBy2030Range[0] !== 0 ||
+      ghgReductionBy2030Range[1] !== maxValues.maxGhgReductionBy2030
+    ) {
+      params.set(
+        "ghgReductionBy2030",
+        `${ghgReductionBy2030Range[0]},${ghgReductionBy2030Range[1]}`,
+      );
+    }
     if (view !== "map") {
       params.set("view", view);
     }
@@ -201,6 +246,7 @@ export function Map({
     searchInSummaries,
     investmentCostRange,
     operationalCostPerYearRange,
+    ghgReductionBy2030Range,
     isInitialized,
     maxValues,
     view,
@@ -266,6 +312,15 @@ export function Map({
           action.operationalCostPerYear <= operationalCostPerYearRange[1],
       );
 
+      // Filter by GHG reduction by 2030 range
+      filtered = filtered.filter((action) => {
+        const ghgReductionValue = getGhgReductionValue(action);
+        return (
+          ghgReductionValue >= ghgReductionBy2030Range[0] &&
+          ghgReductionValue <= ghgReductionBy2030Range[1]
+        );
+      });
+
       // Filter by keywords
       if (keywords.length > 0 && (searchInNames || searchInSummaries)) {
         filtered = filtered.filter((action) => {
@@ -293,6 +348,7 @@ export function Map({
       selectedLevers,
       investmentCostRange,
       operationalCostPerYearRange,
+      ghgReductionBy2030Range,
       keywords,
       searchInNames,
       searchInSummaries,
@@ -552,6 +608,7 @@ export function Map({
     selectedLevers,
     investmentCostRange,
     operationalCostPerYearRange,
+    ghgReductionBy2030Range,
     keywords,
     searchInNames,
     searchInSummaries,
@@ -617,6 +674,15 @@ export function Map({
         action.operationalCostPerYear <= operationalCostPerYearRange[1],
     );
 
+    // Filter by GHG reduction by 2030 range
+    filtered = filtered.filter((action) => {
+      const ghgReductionValue = getGhgReductionValue(action);
+      return (
+        ghgReductionValue >= ghgReductionBy2030Range[0] &&
+        ghgReductionValue <= ghgReductionBy2030Range[1]
+      );
+    });
+
     // Filter by keywords
     if (keywords.length > 0 && (searchInNames || searchInSummaries)) {
       filtered = filtered.filter((action) => {
@@ -643,6 +709,7 @@ export function Map({
     selectedLevers,
     investmentCostRange,
     operationalCostPerYearRange,
+    ghgReductionBy2030Range,
     keywords,
     searchInNames,
     searchInSummaries,
@@ -708,8 +775,13 @@ export function Map({
           onOperationalCostPerYearChange={(min, max) =>
             setOperationalCostPerYearRange([min, max])
           }
+          ghgReductionBy2030={ghgReductionBy2030Range}
+          onGhgReductionBy2030Change={(min, max) =>
+            setGhgReductionBy2030Range([min, max])
+          }
           maxInvestmentCost={maxValues.maxInvestmentCost}
           maxOperationalCostPerYear={maxValues.maxOperationalCost}
+          maxGhgReductionBy2030={maxValues.maxGhgReductionBy2030}
         />
       </div>
       <button

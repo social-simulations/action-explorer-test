@@ -16,6 +16,7 @@ export function ActionDetails({
     description,
     investmentCost,
     operationalCostPerYear,
+    ghgReductionBy2030,
     tagIds,
     thematicAreasLever,
     thematicAreasNonLever,
@@ -125,6 +126,14 @@ export function ActionDetails({
         </section>
 
         <section className="action-details-metrics">
+          <div className="action-details-metric">
+            <div className="action-details-metric-label">
+              GHG emissions reduction by 2030:
+            </div>
+            <div className="action-details-metric-value">
+              {ghgReductionBy2030 ?? "-"}
+            </div>
+          </div>
           <div className="action-details-metric">
             <div className="action-details-metric-label">Investment cost</div>
             <div className="action-details-metric-value">

@@ -109,7 +109,7 @@
   border-radius: 4px;
   padding: 14px 16px 13px;
   display: grid;
-  grid-template-columns: repeat(2, minmax(180px, 1fr));
+  grid-template-columns: repeat(3, minmax(180px, 1fr));
   gap: 26px;
 }
 

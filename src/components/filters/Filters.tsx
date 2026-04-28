@@ -31,8 +31,11 @@ type FiltersProps = {
   onInvestmentCostChange?: (min: number, max: number) => void;
   operationalCostPerYear?: [number, number];
   onOperationalCostPerYearChange?: (min: number, max: number) => void;
+  ghgReductionBy2030?: [number, number];
+  onGhgReductionBy2030Change?: (min: number, max: number) => void;
   maxInvestmentCost?: number;
   maxOperationalCostPerYear?: number;
+  maxGhgReductionBy2030?: number;
 };
 
 export function Filters({
@@ -59,8 +62,11 @@ export function Filters({
   onInvestmentCostChange,
   operationalCostPerYear = [0, 100],
   onOperationalCostPerYearChange,
+  ghgReductionBy2030 = [0, 100],
+  onGhgReductionBy2030Change,
   maxInvestmentCost = 1000000,
   maxOperationalCostPerYear = 50000,
+  maxGhgReductionBy2030 = 100,
 }: FiltersProps) {
   const countryEntries = Object.entries(Country);
   const tagEntries = tags.map(
@@ -73,6 +79,8 @@ export function Filters({
   const [operatingCostPerYear, setOperatingCostPerYear] = useState(
     operationalCostPerYear,
   );
+  const [ghgReductionRange, setGhgReductionRange] =
+    useState(ghgReductionBy2030);
 
   // Sync state with prop changes from parent
   useEffect(() => {
@@ -83,6 +91,10 @@ export function Filters({
     setOperatingCostPerYear(operationalCostPerYear);
   }, [operationalCostPerYear]);
 
+  useEffect(() => {
+    setGhgReductionRange(ghgReductionBy2030);
+  }, [ghgReductionBy2030]);
+
   const handleInvestmentCostChange = (min: number, max: number) => {
     setInvestCost([min, max]);
     onInvestmentCostChange?.(min, max);
@@ -91,6 +103,11 @@ export function Filters({
   const handleOperationalCostPerYearChange = (min: number, max: number) => {
     setOperatingCostPerYear([min, max]);
     onOperationalCostPerYearChange?.(min, max);
+  };
+
+  const handleGhgReductionChange = (min: number, max: number) => {
+    setGhgReductionRange([min, max]);
+    onGhgReductionBy2030Change?.(min, max);
   };
 
   const handleClearInvestmentCost = () => {
@@ -106,6 +123,16 @@ export function Filters({
   const handleClearOperationalCost = () => {
     const params = new URLSearchParams(window.location.search);
     params.delete("operationalCostPerYear");
+    window.history.replaceState(
+      {},
+      "",
+      `${window.location.pathname}?${params}`,
+    );
+  };
+
+  const handleClearGhgReduction = () => {
+    const params = new URLSearchParams(window.location.search);
+    params.delete("ghgReductionBy2030");
     window.history.replaceState(
       {},
       "",
@@ -133,6 +160,7 @@ export function Filters({
     params.delete("keywords");
     params.delete("investmentCost");
     params.delete("operationalCostPerYear");
+    params.delete("ghgReductionBy2030");
     window.history.replaceState(
       {},
       "",
@@ -147,6 +175,7 @@ export function Filters({
     onKeywordsChange?.([]);
     onInvestmentCostChange?.(0, maxInvestmentCost);
     onOperationalCostPerYearChange?.(0, maxOperationalCostPerYear);
+    onGhgReductionBy2030Change?.(0, maxGhgReductionBy2030);
   };
 
   return (
@@ -201,6 +230,16 @@ export function Filters({
           label="Systemic Lever"
         />
         <div className="filters-divider"></div>
+        <RangeFilter
+          label="GHG reduction by 2030"
+          minValue={ghgReductionRange[0]}
+          maxValue={ghgReductionRange[1]}
+          maxLimit={maxGhgReductionBy2030}
+          defaultMinValue={0}
+          defaultMaxValue={maxGhgReductionBy2030}
+          onRangeChange={handleGhgReductionChange}
+          onClear={handleClearGhgReduction}
+        />
         <RangeFilter
           label="Investment cost"
           minValue={investCost[0]}
