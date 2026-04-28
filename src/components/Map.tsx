@@ -4,7 +4,7 @@ import "maplibre-gl/dist/maplibre-gl.css";
 import "./map.css";
 import { Action, City } from "../types/types";
 import { ActionList } from "./list/ActionList";
-import { getColorForCount } from "../utils/colorScale";
+import { createColorScaleModel } from "../utils/colorScale";
 import { Country, ActionArea } from "../enums/enums";
 import { Filters } from "./filters";
 import { ActionDetails } from "./details";
@@ -20,6 +20,7 @@ export function Map({ cities = [], actions = [] }: Props) {
   const tooltipTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const [showZoomHint, setShowZoomHint] = useState(false);
+  const [showLegend, setShowLegend] = useState(false);
   const [isMapLoaded, setIsMapLoaded] = useState(false);
   const [view, setView] = useState<"map" | "list">("map");
   const [selectedActionId, setSelectedActionId] = useState<string | null>(null);
@@ -258,6 +259,21 @@ export function Map({ cities = [], actions = [] }: Props) {
     ],
   );
 
+  const cityCountById = useMemo(() => {
+    const counts: Record<string, number> = {};
+
+    cities.forEach((city) => {
+      counts[city.id.toString()] = getActionCountForCity(city.id);
+    });
+
+    return counts;
+  }, [cities, getActionCountForCity]);
+
+  const colorScaleModel = useMemo(
+    () => createColorScaleModel(Object.values(cityCountById)),
+    [cityCountById],
+  );
+
   // Initialize map and add event listeners
   useEffect(() => {
     const container = mapContainerRef.current;
@@ -403,11 +419,10 @@ export function Map({ cities = [], actions = [] }: Props) {
             },
           },
           paint: {
-            "circle-radius": 8,
+            "circle-radius": 6,
             "circle-color": ["get", "color"],
             "circle-stroke-width": 2,
             "circle-stroke-color": "#175162",
-            "circle-opacity": 0.8,
           },
         });
 
@@ -478,7 +493,9 @@ export function Map({ cities = [], actions = [] }: Props) {
         properties: {
           id: city.id,
           name: city.name,
-          color: getColorForCount(getActionCountForCity(city.id)),
+          color: colorScaleModel.getColorForCount(
+            cityCountById[city.id.toString()] ?? 0,
+          ),
         },
       })),
     });
@@ -494,7 +511,8 @@ export function Map({ cities = [], actions = [] }: Props) {
     keywords,
     searchInNames,
     searchInSummaries,
-    getActionCountForCity,
+    cityCountById,
+    colorScaleModel,
   ]);
 
   // Get filtered actions for list view
@@ -631,8 +649,33 @@ export function Map({ cities = [], actions = [] }: Props) {
       >
         {view === "map" ? "Show list" : "Show map"}
       </button>
+      {view === "map" && (
+        <button
+          className="view-toggle-button legend-toggle-button"
+          style={showLegend ? { borderRadius: "0 0 8px 8px" } : {}}
+          onClick={() => setShowLegend((current) => !current)}
+        >
+          {showLegend ? "Hide legend" : "Show legend"}
+        </button>
+      )}
       {view === "map" ? (
         <div className="map" id="map" ref={mapContainerRef}>
+          {showLegend && (
+            <div className="map-legend" aria-label="Action count legend">
+              {colorScaleModel.legendItems.map((item) => (
+                <div
+                  key={`${item.color}-${item.label}`}
+                  className="map-legend-item"
+                >
+                  <span
+                    className={`map-legend-swatch${item.color === "#ffffff" ? " map-legend-swatch--zero" : ""}`}
+                    style={{ backgroundColor: item.color }}
+                  />
+                  <span className="map-legend-label">{item.label}</span>
+                </div>
+              ))}
+            </div>
+          )}
           {showZoomHint && (
             <div className="map-zoom-hint">
               Hold <kbd>Ctrl</kbd> / <kbd>⌘</kbd> to zoom
