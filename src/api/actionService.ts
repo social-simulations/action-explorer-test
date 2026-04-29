@@ -63,6 +63,40 @@ function asNullableNumberOrString(value: unknown): number | string | null {
   return null;
 }
 
+function asStringArray(value: unknown): string[] {
+  if (value === null || value === undefined) {
+    return [];
+  }
+
+  if (Array.isArray(value)) {
+    return value
+      .flatMap((item) => {
+        if (typeof item === "string") {
+          return item.includes(",") ? item.split(",") : [item];
+        }
+        if (typeof item === "number") {
+          return [String(item)];
+        }
+        return [];
+      })
+      .map((item) => item.trim())
+      .filter(Boolean);
+  }
+
+  if (typeof value === "string") {
+    return value
+      .split(",")
+      .map((item) => item.trim())
+      .filter(Boolean);
+  }
+
+  if (typeof value === "number") {
+    return [String(value)];
+  }
+
+  return [];
+}
+
 function asIdArray(value: unknown): Array<string | number> {
   if (value === null || value === undefined) {
     return [];
@@ -220,6 +254,12 @@ function mapActions(rawActions: unknown[], cities: City[]): Action[] {
       name: asString(action.name, `Action ${index + 1}`),
       summary,
       description: summary,
+      spatialFrames: asStringArray(
+        action.spatial_frames ??
+          action.spatial_frame ??
+          action.spatialFrames ??
+          action.spatialFrame,
+      ),
       ghgReductionBy2030: asNullableNumberOrString(
         action.ghg_reduction_by_2030 ?? action.ghgReductionBy2030,
       ),

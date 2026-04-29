@@ -4,7 +4,7 @@ import { CityMultiSelect } from "./inputs/CityMultiSelect";
 import { MultiSelect } from "./inputs/MultiSelect";
 import { RangeFilter } from "./inputs/RangeFilter";
 import { TextFilter } from "./inputs/TextFilter";
-import { Country } from "../../enums";
+import { Country, SpatialFrame } from "../../enums";
 import "./filters.css";
 
 type FiltersProps = {
@@ -21,6 +21,8 @@ type FiltersProps = {
   onAreasChange: (areas: string[]) => void;
   selectedLevers: string[];
   onLeversChange: (levers: string[]) => void;
+  selectedSpatialFrames: string[];
+  onSpatialFramesChange: (spatialFrames: string[]) => void;
   keywords?: string[];
   onKeywordsChange?: (keywords: string[]) => void;
   searchInNames?: boolean;
@@ -52,6 +54,8 @@ export function Filters({
   onAreasChange,
   selectedLevers,
   onLeversChange,
+  selectedSpatialFrames,
+  onSpatialFramesChange,
   keywords = [],
   onKeywordsChange,
   searchInNames = true,
@@ -69,6 +73,7 @@ export function Filters({
   maxGhgReductionBy2030 = 100,
 }: FiltersProps) {
   const countryEntries = Object.entries(Country);
+  const spatialFrameEntries = Object.entries(SpatialFrame);
   const tagEntries = tags.map(
     (tag) => [tag.id.toString(), tag.name] as [string, string],
   );
@@ -157,6 +162,7 @@ export function Filters({
     params.delete("tags");
     params.delete("areas");
     params.delete("levers");
+    params.delete("spatialFrames");
     params.delete("keywords");
     params.delete("investmentCost");
     params.delete("operationalCostPerYear");
@@ -172,6 +178,7 @@ export function Filters({
     onTagsChange([]);
     onAreasChange([]);
     onLeversChange([]);
+    onSpatialFramesChange([]);
     onKeywordsChange?.([]);
     onInvestmentCostChange?.(0, maxInvestmentCost);
     onOperationalCostPerYearChange?.(0, maxOperationalCostPerYear);
@@ -228,6 +235,12 @@ export function Filters({
           selected={selectedLevers}
           onChange={onLeversChange}
           label="Systemic Lever"
+        />
+        <MultiSelect
+          options={spatialFrameEntries}
+          selected={selectedSpatialFrames}
+          onChange={onSpatialFramesChange}
+          label="Spatial Frame"
         />
         <div className="filters-divider"></div>
         <RangeFilter

@@ -1,1 +1,1 @@
-export { ActionArea, Country } from "./enums";
+export { ActionArea, Country, SpatialFrame } from "./enums";

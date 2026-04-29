@@ -5,7 +5,7 @@ import "./map.css";
 import { Action, City, Tag, ThematicArea } from "../types/types";
 import { ActionList } from "./list/ActionList";
 import { createColorScaleModel } from "../utils/colorScale";
-import { Country } from "../enums/enums";
+import { Country, SpatialFrame } from "../enums";
 import { Filters } from "./filters";
 import { ActionDetails } from "./details";
 
@@ -52,6 +52,9 @@ export function Map({
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [selectedAreas, setSelectedAreas] = useState<string[]>([]);
   const [selectedLevers, setSelectedLevers] = useState<string[]>([]);
+  const [selectedSpatialFrames, setSelectedSpatialFrames] = useState<string[]>(
+    [],
+  );
   const [keywords, setKeywords] = useState<string[]>([]);
   const [searchInNames, setSearchInNames] = useState(true);
   const [searchInSummaries, setSearchInSummaries] = useState(true);
@@ -93,6 +96,7 @@ export function Map({
     const tagsParam = params.get("tags");
     const areasParam = params.get("areas");
     const leversParam = params.get("levers");
+    const spatialFramesParam = params.get("spatialFrames");
     const keywordsParam = params.get("keywords");
     const searchInNamesParam = params.get("searchInNames");
     const searchInSummariesParam = params.get("searchInSummaries");
@@ -116,6 +120,9 @@ export function Map({
     }
     if (leversParam) {
       setSelectedLevers(leversParam.split(","));
+    }
+    if (spatialFramesParam) {
+      setSelectedSpatialFrames(spatialFramesParam.split(","));
     }
     if (keywordsParam) {
       setKeywords(keywordsParam.split(","));
@@ -192,6 +199,9 @@ export function Map({
     if (selectedLevers.length > 0) {
       params.set("levers", selectedLevers.join(","));
     }
+    if (selectedSpatialFrames.length > 0) {
+      params.set("spatialFrames", selectedSpatialFrames.join(","));
+    }
     if (keywords.length > 0) {
       params.set("keywords", keywords.join(","));
     }
@@ -241,6 +251,7 @@ export function Map({
     selectedTags,
     selectedAreas,
     selectedLevers,
+    selectedSpatialFrames,
     keywords,
     searchInNames,
     searchInSummaries,
@@ -298,6 +309,21 @@ export function Map({
         );
       }
 
+      if (selectedSpatialFrames.length > 0) {
+        const selectedSpatialFrameValues = new Set(
+          selectedSpatialFrames
+            .map((key) => SpatialFrame[key as keyof typeof SpatialFrame])
+            .filter(Boolean)
+            .map((value) => value.toLowerCase()),
+        );
+
+        filtered = filtered.filter((action) =>
+          (action.spatialFrames ?? []).some((frame) =>
+            selectedSpatialFrameValues.has(frame.toLowerCase()),
+          ),
+        );
+      }
+
       // Filter by investment cost range
       filtered = filtered.filter(
         (action) =>
@@ -346,6 +372,7 @@ export function Map({
       selectedTags,
       selectedAreas,
       selectedLevers,
+      selectedSpatialFrames,
       investmentCostRange,
       operationalCostPerYearRange,
       ghgReductionBy2030Range,
@@ -606,6 +633,7 @@ export function Map({
     selectedTags,
     selectedAreas,
     selectedLevers,
+    selectedSpatialFrames,
     investmentCostRange,
     operationalCostPerYearRange,
     ghgReductionBy2030Range,
@@ -660,6 +688,21 @@ export function Map({
       );
     }
 
+    if (selectedSpatialFrames.length > 0) {
+      const selectedSpatialFrameValues = new Set(
+        selectedSpatialFrames
+          .map((key) => SpatialFrame[key as keyof typeof SpatialFrame])
+          .filter(Boolean)
+          .map((value) => value.toLowerCase()),
+      );
+
+      filtered = filtered.filter((action) =>
+        (action.spatialFrames ?? []).some((frame) =>
+          selectedSpatialFrameValues.has(frame.toLowerCase()),
+        ),
+      );
+    }
+
     // Filter by investment cost range
     filtered = filtered.filter(
       (action) =>
@@ -707,6 +750,7 @@ export function Map({
     selectedTags,
     selectedAreas,
     selectedLevers,
+    selectedSpatialFrames,
     investmentCostRange,
     operationalCostPerYearRange,
     ghgReductionBy2030Range,
@@ -761,6 +805,8 @@ export function Map({
           onAreasChange={setSelectedAreas}
           selectedLevers={selectedLevers}
           onLeversChange={setSelectedLevers}
+          selectedSpatialFrames={selectedSpatialFrames}
+          onSpatialFramesChange={setSelectedSpatialFrames}
           keywords={keywords}
           onKeywordsChange={setKeywords}
           searchInNames={searchInNames}

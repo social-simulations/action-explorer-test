@@ -20,6 +20,7 @@ export function ActionDetails({
     tagIds,
     thematicAreasLever,
     thematicAreasNonLever,
+    spatialFrames,
   },
   tags,
   thematicAreas,
@@ -49,6 +50,10 @@ export function ActionDetails({
         )?.name,
     )
     .filter((label): label is string => Boolean(label));
+
+  const spatialFrameLabels = (spatialFrames ?? []).filter(
+    (label): label is string => Boolean(label),
+  );
 
   return (
     <div className="action-details">
@@ -113,6 +118,20 @@ export function ActionDetails({
               <span className="action-details-area-pill-container">
                 {fieldOfActionLabels.length > 0 ? (
                   fieldOfActionLabels.map((label) => (
+                    <span key={label} className="action-details-area-pill">
+                      {label}
+                    </span>
+                  ))
+                ) : (
+                  <span className="action-details-area-pill">-</span>
+                )}
+              </span>
+            </div>
+            <div className="action-details-area-row">
+              <span className="action-details-area-label">Spatial Frame:</span>
+              <span className="action-details-area-pill-container">
+                {spatialFrameLabels.length > 0 ? (
+                  spatialFrameLabels.map((label) => (
                     <span key={label} className="action-details-area-pill">
                       {label}
                     </span>
