@@ -28,7 +28,12 @@ function App() {
   }, []);
 
   if (isLoading) {
-    return <div className="App">Loading data...</div>;
+    return (
+      <div className="App App-loading" role="status" aria-live="polite">
+        <div className="App-spinner" aria-hidden="true" />
+        <span className="App-loading-text">Loading data...</span>
+      </div>
+    );
   }
 
   if (error) {
