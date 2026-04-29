@@ -55,6 +55,23 @@ export function ActionDetails({
     (label): label is string => Boolean(label),
   );
 
+  const ghgDisplayValue = (() => {
+    if (ghgReductionBy2030 === null || ghgReductionBy2030 === undefined) {
+      return "-";
+    }
+
+    const value = String(ghgReductionBy2030).trim();
+    if (!value) {
+      return "-";
+    }
+
+    if (/co2|co₂|tco2|tco₂|eq\/year/i.test(value)) {
+      return value;
+    }
+
+    return `${value} tCO₂eq/year`;
+  })();
+
   return (
     <div className="action-details">
       <div className="action-list-header">
@@ -149,20 +166,18 @@ export function ActionDetails({
             <div className="action-details-metric-label">
               GHG emissions reduction by 2030:
             </div>
-            <div className="action-details-metric-value">
-              {ghgReductionBy2030 ?? "-"}
-            </div>
+            <div className="action-details-metric-value">{ghgDisplayValue}</div>
           </div>
           <div className="action-details-metric">
             <div className="action-details-metric-label">Investment cost</div>
             <div className="action-details-metric-value">
-              ${investmentCost.toLocaleString()}
+              {investmentCost.toLocaleString()} mEur
             </div>
           </div>
           <div className="action-details-metric">
             <div className="action-details-metric-label">Operational cost</div>
             <div className="action-details-metric-value">
-              ${operationalCostPerYear.toLocaleString()}/year
+              {operationalCostPerYear.toLocaleString()} mEur/year
             </div>
           </div>
         </section>
